@@ -1,33 +1,57 @@
-STILL TO DO
+TO DO
+======================================================================
+
+INFRASTRUCTURE
+
 # Formalize virtualenv bootstrap
 # Use config file to locate data directory instead of hardcoded path
-# Head shot/primary image
-# Make xref display sensitive to the type of xref document
-# Validate @names
-# "Header" stuff on the side, not the top
-# Complete life chronology
-# Better font choices in css
-# search (regex)
-# cross-link addresses
-# Proxy images correctly
-# Fix link scope when expanding name to include "child of"
-# Add support for internal TOC
-# Need to allow for escaped @?
-# How to handle structured info better (e.g. marriage) by using indentation
-# "list of all people/documents" (sortable by name, location, modified stamp, birth date, record date, etc.)
-# support for confidence levels
 # auto-index when timestamps require it (or make it easier to do automatically)
-# display family tree
-# display list of children (computed)
-# jquery?
-# make Page act more databasey (linking to others, etc.)
+
+ARCHITECTURE
+
+# Page object should lazyload
+# make Page act more databasey (linking to others, etc.) (watch out for greediness!)
+# Serve up images (by proxying if needed)
+
+DATA AND METADATA
+
+# support for confidence levels
 # support for external URLs
-# Page object should lazyload 
-# text is just another info member, but implicit?
+# Turn street addresses into @paths
+# Need to allow for escaped @?
 # tag \source for data
 # any info can have metadata
 # within a document, be able to mark blocks as being \about @people
 # schema to validate info tags
+# make text (and info?) a structured tree, with {} designating atoms?
+
+DATA VALIDATION
+
+# How to handle structured info better (e.g. marriage) by using indentation
+# Validate @paths
+
+AUTO-GENERATED CONTENT SUMMARY
+
+# display family tree
+# display list of children (computed)
+# Complete life chronology
+
+APPEARANCE
+
+# Better font choices in css
+# "Header" stuff on the side, not the top
+# Head shot/primary image
+# Make display of auto-indexed xref links sensitive to the type of xref document
+# Fix scope of <a> tag for name when expanding it to include "child of" (parents should be their own links)
+# jquery?
+
+NAVIGATION
+
+# Search site (using regex)
+# Add support for internal TOC within text
+# "list of all people/documents" (sortable by name, location, modified stamp, birth date, record date, etc.)
+
+----------------------------------------------------------------------
 
 # Types of pages: 
 # - Documents (B_ M_ D_ N_ T_ C_ A_ P_ X_ birth/marriage/death/natl/travel (eg passenger list)/census/article/photo/other)
