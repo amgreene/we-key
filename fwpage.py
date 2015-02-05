@@ -33,6 +33,14 @@ class Page:
         
         with codecs.open(os.path.join(data_dir, 'xrefs.txt'), 'r', 'utf-8') as x_file:
             self.xrefs = json.load(x_file).get(page_name, [])
+        with codecs.open(os.path.join(data_dir, 'relationships.json'), 'r', 'utf-8') as x_file:
+            self.relations = json.load(x_file).get('@' + page_name, {})
+
+    def __unicode__(self):
+        return self.page_name
+
+    def __str__(self):
+        return str(unicode(self))
 
     def find_name_for(self, at_path):
         try:
@@ -95,7 +103,7 @@ class Page:
     def __getattr__(self, name):
         if self.info.has_key(name):
             return self.info[name]
-        raise AttributeError
+        return []
 
     # TO DO -- if an @Name can be resolved, use the person's real name. Otherwise, expand out the camel case
     def resolve_info(self, key):
@@ -133,6 +141,10 @@ class Page:
             outlines.append("<div class='parent father'>Father: " + self.resolve_info('father') + "</div>")
         if self.info.has_key('mother'):
             outlines.append("<div class='parent mother'>Mother: " + self.resolve_info('mother') + "</div>")
+        if self.relations.has_key('children'):
+            outlines.append("<div class='children'>Children: " + ", ".join([
+                self.resolve_value(child_path) for child_path in self.relations['children']
+                ]) + "</div>")
         if len(self.xrefs):
             outlines.append("<div class='xrefs'>Referenced by: " + ', '.join(
                 self.resolve_value(v) for v in self.xrefs
@@ -203,6 +215,34 @@ def make_index():
     with codecs.open(os.path.join(data_dir, 'xrefs.txt'), 'w', 'utf-8') as o:
         json.dump(converted_refs, o, ensure_ascii=False, indent=2, sort_keys=True)
 
+def make_relationship_index():
+    refs = {}
+    def add_value(at_path, relationship, other_at_path):
+        if not refs.has_key(at_path):
+            refs[at_path] = {}
+        if not refs[at_path].has_key(relationship):
+            refs[at_path][relationship] = []
+        refs[at_path][relationship].append(other_at_path)
+
+    for f in os.listdir(data_dir):
+        if not f.endswith('.html'):
+            continue
+        at_path = '@' + f[:-5]
+        p = Page(at_path)
+
+        for parent in p.father:
+            add_value(at_path, 'father', parent)
+            add_value(parent, 'children', at_path)
+        for parent in p.mother:
+            add_value(at_path, 'mother', parent)
+            add_value(parent, 'children', at_path)
+        for spouse in p.married:
+            add_value(at_path, 'spouses', spouse)
+            add_value(spouse, 'spouses', at_path)
+    
+    with codecs.open(os.path.join(data_dir, 'relationships.json'), 'w', 'utf-8') as o:
+        json.dump(refs, o, ensure_ascii=False, indent=2, sort_keys=True)
+
 if __name__ == '__main__':
     import sys
-    print turn_page_into_html(sys.argv[1])
+    make_relationship_index()

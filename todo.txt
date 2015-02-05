@@ -13,7 +13,6 @@ ARCHITECTURE
 # Page object should lazyload
 # make Page act more databasey (linking to others, etc.) (watch out for greediness!)
 # Serve up images (by proxying if needed)
-# Just like we autogenerate the xref index, we should generate a relationship index
 
 DATA AND METADATA
 
@@ -32,11 +31,13 @@ DATA VALIDATION
 
 # How to handle structured info better (e.g. marriage) by using indentation
 # Validate @paths
+# Check that marriages are symmetrical
+# Check that children are born a reasonable time after their parents
 
 AUTO-GENERATED CONTENT SUMMARY
 
 # display family tree
-# display list of children (computed)
+# display list of children in a more useful form
 # Complete life chronology
 
 APPEARANCE
@@ -48,6 +49,7 @@ APPEARANCE
 # Fix scope of <a> tag for name when expanding it to include "child of" (parents should be their own links)
 # jquery?
 # Smallcaps for last names?
+
 NAVIGATION
 
 # Search site (using regex)
@@ -71,6 +73,9 @@ Sprint 2 -- in process
 # DONE add "last modified" timestamp to bottom of page
 # DONE make reindexing easier to get to
 # DONE The indexes should be JSON
+# DONE Generate a relationship index alongside the general-purpose xref index
+# DONE display list of children (computed) (proof of data flow)
+
 
 Sprint 1 -- 2014-02-04
 

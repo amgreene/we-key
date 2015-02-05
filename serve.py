@@ -1,4 +1,4 @@
-from fwpage import Page, make_index
+from fwpage import Page, make_index, make_relationship_index
 from flask import Flask
 app = Flask(__name__)
 app.debug = True
@@ -14,6 +14,7 @@ def faviconx():
 @app.route("/reindex")
 def reindex():
     make_index()
+    make_relationship_index()
     return 'Indexed.'
 
 @app.route("/<name>")
