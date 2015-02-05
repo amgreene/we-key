@@ -28,8 +28,6 @@ class Page:
         if file_name[0] == '@':
             file_name = file_name[1:]
         self.load(file_name)
-        if len(self.text) == 0:
-            self.text.append("This page is a stub. Nothing more is known at this time.")
         
         for xref_line in data_open('xrefs.txt'):
             if xref_line.startswith(page_name + ' '):
@@ -132,6 +130,25 @@ class Page:
             ) + "</div>")
         outlines.append("</div>")
 
+    def format_one_line(self, line):
+        line = cgi.escape(line)
+
+        line = re.sub(r'\\addr\{(.*?)\}', r'<span class="addr">\1</a>', line)
+        line = re.sub(r'\\age\{(.*?)\}', r'\1', line) # TO DO --> implied birth year
+        line = re.sub(r'@(\S+) qua{(.*?)}', r'<a href="\1">\2</a>', line)
+        line = re.sub(r'@(\S+)', r'<a href="\1">\1</a>', line)
+        line = re.sub(r'(\d{4}-\d{2}-\d{2})', r'<span class="date">\1</span>', line)
+
+        if self.info.has_key('isform'):
+            if ': ' in line:
+                line = "<tr><td>" + re.sub(r': (.*)', r':</td><td><b>\1</b>', line) + "</td></tr>"
+            else:
+                line = "<tr><td colspan=2>" + line + "</td></tr>"
+        else:
+            line += "<br>"
+
+        return line
+
     def turn_page_into_html(self):
         outlines = []
         outlines.append("<title>" + self.page_name + "</title>")
@@ -139,26 +156,17 @@ class Page:
         outlines.append("<div class='text'>")
         if self.info.has_key('isform'):
             outlines.append("<table cellpadding=0 cellborders=0>")
+        is_stub = True
         for line in self.text:
-            line = cgi.escape(line)
-
-            line = re.sub(r'\\addr\{(.*?)\}', r'<span class="addr">\1</a>', line)
-            line = re.sub(r'\\age\{(.*?)\}', r'\1', line) # TO DO --> implied birth year
-            line = re.sub(r'@(\S+) qua{(.*?)}', r'<a href="\1">\2</a>', line)
-            line = re.sub(r'@(\S+)', r'<a href="\1">\1</a>', line)
-            line = re.sub(r'(\d{4}-\d{2}-\d{2})', r'<span class="date">\1</span>', line)
-
-            if self.info.has_key('isform'):
-                if ': ' in line:
-                    line = "<tr><td>" + re.sub(r': (.*)', r':</td><td><b>\1</b>', line) + "</td></tr>"
-                else:
-                    line = "<tr><td colspan=2>" + line + "</td></tr>"
-            else:
-                line += "<br>"
-
-            outlines.append(line)
+            formatted_line = self.format_one_line(line)
+            if len(formatted_line.strip()):
+                is_stub = False
+            outlines.append(formatted_line)
         if self.info.has_key('isform'):
             outlines.append("</table>")
+        if is_stub:
+            outlines.append("This page is a stub. Nothing more is known at this time.")
+
         outlines.append("</div>")
 
         for line in data_open('images-index.txt'):
