@@ -1,0 +1,48 @@
+html
+{
+  background-color: black;
+  color: white;
+  font-family: shanti, sans-serif;
+  margin-left: 24pt;
+  margin-right: 24pt;
+}
+
+a, a:visited
+{
+  color: white;
+  text-decoration: none;
+}
+
+a:hover
+{
+  text-decoration: underline;
+}
+
+div.name
+{
+  font-size: 36pt;
+}
+
+div.header
+{
+  margin-bottom: 12pt;
+}
+
+div.text table tr td
+{
+  color: black;
+}
+
+div.text
+{
+  margins: 12pt;
+  padding: 12pt;
+  border-radius: 12pt;
+  background-color: #ffe;
+  color: black;
+}
+
+div.text a
+{
+  color: black;
+}
