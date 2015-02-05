@@ -14,13 +14,11 @@ STILL TO DO
 # Add support for internal TOC
 # Need to allow for escaped @?
 # How to handle structured info better (e.g. marriage) by using indentation
-# add "last modified" timestamp to bottom of page
 # "list of all people/documents" (sortable by name, location, modified stamp, birth date, record date, etc.)
 # support for confidence levels
 # auto-index when timestamps require it (or make it easier to do automatically)
 # display family tree
 # display list of children (computed)
-# If it's a @FooBar, then when pretty-printing it insert spaces
 # jquery?
 # make Page act more databasey (linking to others, etc.)
 # support for external URLs
@@ -39,6 +37,11 @@ STILL TO DO
 # - Articles
 
 ----------------------------------------------------------------------
+
+Sprint 2 -- in process
+
+# DONE If it's a @FooBar, then when pretty-printing it insert spaces
+# DONE add "last modified" timestamp to bottom of page
 
 Sprint 1 -- 2014-02-04
 

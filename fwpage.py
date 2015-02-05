@@ -1,6 +1,7 @@
 import cgi
 import codecs
 import collections
+import datetime
 import re
 import os
 
@@ -67,8 +68,16 @@ class Page:
         
     def load(self, file_name):
         if not os.path.exists(os.path.join(data_dir, file_name)):
-            self.info['name'] = [file_name.split('.')[0]]
+            # No file backs up this at_path
+            # So just take the atpath itself, and insert spaces where there's camel-casing
+            self.info['name'] = [re.sub('([a-z0-9])([A-Z])', r'\1 \2', 
+                                        (file_name.split('.')[0]))
+                             ]
+            # no file means no mtime
+            self.mtime = ''
             return
+        self.mtime = datetime.datetime.fromtimestamp(
+            os.path.getmtime(os.path.join(data_dir, file_name))).strftime('%Y-%m-%d %H:%M:%S')
         for line in data_open(file_name):
             line = line.rstrip()
             if line == '':
@@ -168,6 +177,9 @@ class Page:
             outlines.append("This page is a stub. Nothing more is known at this time.")
 
         outlines.append("</div>")
+
+        if self.mtime:
+            outlines.append("<div class='mtime'>Last updated " + self.mtime + "</div>")
 
         for line in data_open('images-index.txt'):
             splits = line.split(' ')
