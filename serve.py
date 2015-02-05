@@ -11,8 +11,8 @@ def hello():
 def faviconx():
     return ''
 
-@app.route("/index")
-def favicon():
+@app.route("/reindex")
+def reindex():
     make_index()
     return 'Indexed.'
 
@@ -21,7 +21,10 @@ def do_name(name):
     csslink = '<link rel="stylesheet" type="text/css" href="static/g.css">'
     csslink += '<script src="//use.edgefonts.net/alegreya;shanti.js"></script>'
     page = Page(name)
-    return csslink + page.turn_page_into_html()
+    return (csslink + 
+            page.turn_page_into_html() +
+            "<hr>Tools: <a target='_blank' href='/reindex'>Re-index</a>"
+        )
 
 if __name__ == "__main__":
     app.run()
