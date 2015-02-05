@@ -2,6 +2,7 @@ import cgi
 import codecs
 import collections
 import datetime
+import json
 import re
 import os
 
@@ -30,9 +31,8 @@ class Page:
             file_name = file_name[1:]
         self.load(file_name)
         
-        for xref_line in data_open('xrefs.txt'):
-            if xref_line.startswith(page_name + ' '):
-                self.xrefs = xref_line.split(' ', 1)[1].split(',')
+        with codecs.open(os.path.join(data_dir, 'xrefs.txt'), 'r', 'utf-8') as x_file:
+            self.xrefs = json.load(x_file).get(page_name, [])
 
     def find_name_for(self, at_path):
         try:
@@ -189,6 +189,7 @@ class Page:
 
         return u'\n'.join([unicode(s) for s in outlines])
 
+
 def make_index():
     refs = collections.defaultdict(set)
     for f in os.listdir(data_dir):
@@ -197,9 +198,10 @@ def make_index():
         for line in data_open(f):
             for m in re.findall(r'@(\S+)', line):
                 refs[m].add('@' + f[:-5])
-    with open(os.path.join(data_dir, 'xrefs.txt'), 'w') as o:
-        for r in sorted(refs.keys()):
-            print >> o, r, ','.join(sorted(list(refs[r])))
+    
+    converted_refs = dict([(k, sorted(list(v))) for (k, v) in refs.items()])
+    with codecs.open(os.path.join(data_dir, 'xrefs.txt'), 'w', 'utf-8') as o:
+        json.dump(converted_refs, o, ensure_ascii=False, indent=2, sort_keys=True)
 
 if __name__ == '__main__':
     import sys

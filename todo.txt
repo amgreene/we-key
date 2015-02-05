@@ -14,7 +14,6 @@ ARCHITECTURE
 # make Page act more databasey (linking to others, etc.) (watch out for greediness!)
 # Serve up images (by proxying if needed)
 # Just like we autogenerate the xref index, we should generate a relationship index
-# The indexes should be JSON?
 
 DATA AND METADATA
 
@@ -71,6 +70,7 @@ Sprint 2 -- in process
 # DONE If it's a @FooBar, then when pretty-printing it insert spaces
 # DONE add "last modified" timestamp to bottom of page
 # DONE make reindexing easier to get to
+# DONE The indexes should be JSON
 
 Sprint 1 -- 2014-02-04
 
