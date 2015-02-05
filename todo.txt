@@ -26,6 +26,10 @@ STILL TO DO
 # support for external URLs
 # Page object should lazyload 
 # text is just another info member, but implicit?
+# tag \source for data
+# any info can have metadata
+# within a document, be able to mark blocks as being \about @people
+# schema to validate info tags
 
 # Types of pages: 
 # - Documents (B_ M_ D_ N_ T_ C_ A_ P_ X_ birth/marriage/death/natl/travel (eg passenger list)/census/article/photo/other)
