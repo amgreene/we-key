@@ -1,1 +1,5 @@
 # we-key
+Start off with virtualenv .
+Then Scripts\activate
+Then easy_install flask
+And start off with python serve.py

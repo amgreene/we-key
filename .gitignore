@@ -1,4 +1,7 @@
 *~
+*.pyc
+
+# virtualenv directories:
 Scripts/
 Lib/
 Include/

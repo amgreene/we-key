@@ -1,24 +1,19 @@
-# Put this in git
+STILL TO DO
+# Formalize virtualenv bootstrap
+# Use config file to locate data directory instead of hardcoded path
 # Head shot/primary image
-# DONE Compute reverse index 
-# DONE Display xrefs from reverse index
 # Make xref display sensitive to the type of xref document
 # Validate @names
 # "Header" stuff on the side, not the top
 # Complete life chronology
 # Better font choices in css
-# DONE format.py is the wrong name for that file
 # search (regex)
 # cross-link addresses
-# DONE Nicer formatting of transcribed forms
 # Proxy images correctly
-# DONE add Unicode support; Hebrew Name as a person property
 # Fix link scope when expanding name to include "child of"
 # Add support for internal TOC
-# DONE add default content for unknown name
 # Need to allow for escaped @?
 # How to handle structured info better (e.g. marriage) by using indentation
-# DONE add default text
 # add "last modified" timestamp to bottom of page
 # "list of all people/documents" (sortable by name, location, modified stamp, birth date, record date, etc.)
 # support for confidence levels
@@ -30,8 +25,6 @@
 # make Page act more databasey (linking to others, etc.)
 # support for external URLs
 # Page object should lazyload 
-# DONE Page object should and use generalized __getattr__ to access members of info
-# DONE info should be a defaultdict(list)
 # text is just another info member, but implicit?
 
 # Types of pages: 
@@ -40,4 +33,19 @@
 # - Research dossiers 
 # - Places (cities, addresses, etc.?)
 # - Articles
+
+----------------------------------------------------------------------
+
+Sprint 1 -- 2014-02-04
+
+# DONE Put this in git
+# DONE Compute reverse index 
+# DONE Display xrefs from reverse index
+# DONE format.py is the wrong name for that file
+# DONE Nicer formatting of transcribed forms
+# DONE add Unicode support; Hebrew Name as a person property
+# DONE add default text for pages that don't have any
+# DONE Page object should and use generalized __getattr__ to access members of info
+# DONE info should be a defaultdict(list)
+
 
