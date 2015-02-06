@@ -40,9 +40,75 @@ div.text
   border-radius: 12pt;
   background-color: #ffe;
   color: black;
+  width: 640px;
+}
+
+hr
+{
+  width: 500px;
 }
 
 div.text a
 {
   color: black;
+}
+
+/* Family tree compact representation */
+
+div.ftree
+{
+  position: absolute;
+  right: 10px;
+  top: 20px;
+}
+
+div.ftree_paternal_grandparents,
+div.ftree_maternal_grandparents,
+div.ftree_parents
+{
+  border: 1px solid white;
+  border-radius: 3pt;
+}
+
+div.ftree_paternal_grandparents
+{
+  margin-right: 10px;
+}
+
+div.ftree_maternal_grandparents
+{
+  text-align: right;
+  margin-left: 10px;
+}
+
+div.ftree_paternal_grandparents,
+div.ftree_maternal_grandparents
+{
+  margin-bottom: 10px;
+  font-size: 13pt;
+  padding: 3pt;
+}
+
+div.ftree_paternal_grandparents div.greatgrandparents
+{
+  margin-left: 10px;
+  font-size: 10pt;
+}
+
+div.ftree_maternal_grandparents div.greatgrandparents
+{
+  margin-right: 10px;
+  font-size: 10pt;
+}
+
+div.ftree_parents
+{
+  font-size: 15pt;
+  padding: 3pt;
+}
+
+
+div.ftree_central
+{
+  font-size: 20pt;
 }

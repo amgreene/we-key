@@ -18,12 +18,19 @@ def uncamel_case(s):
     return s
 
 class Page:
+    cache = {}
+
+    @staticmethod
+    def find(page_name):
+        return Page.cache.get(page_name, Page(page_name))
+
     def __init__(self, page_name):
         self.info = collections.defaultdict(list)
         self.text = []
         self.xrefs = []
         self.relations = {}
         self.page_name = page_name
+        Page.cache[page_name] = self
 
         if '.' in page_name:
             return
@@ -55,7 +62,7 @@ class Page:
             at_path2 = at_path
             if at_path2[0] == '@':
                 at_path2 = at_path2[1:]
-            at_page = Page(at_path2)
+            at_page = Page.find(at_path2)
             return at_page.name[0]
         except Exception as e:
             # print e
@@ -66,7 +73,7 @@ class Page:
         
     def find_extended_name_for(self, at_path):
         try:
-            at_page = Page(at_path)
+            at_page = Page.find(at_path)
             n = at_page.name[0]
             parents = []
             parents += at_page.father
@@ -179,10 +186,67 @@ class Page:
 
         return line
 
+    def find_ancestor_by_path(self, path, x='self'):
+        if x is None:
+            return None
+        if x=='self':
+            x = self
+        if isinstance(x, unicode):
+            x = Page.find(x) # kludge
+        if path == '':
+            return x
+        if path[0] == 'm':
+            return self.find_ancestor_by_path(path[1:], (x.mother + [None])[0])
+        if path[0] == 'f':
+            return self.find_ancestor_by_path(path[1:], (x.father + [None])[0])
+        return None
+
+    def generate_ancestors_compact_html(self):
+        ff = self.find_ancestor_by_path('ff')
+        fm = self.find_ancestor_by_path('fm')
+        mf = self.find_ancestor_by_path('mf')
+        mm = self.find_ancestor_by_path('mm')
+        f = self.find_ancestor_by_path('f')
+        m = self.find_ancestor_by_path('m')
+        s = []
+
+        def do_grandparent(gp):
+            if gp is None:
+                return
+            s.append("<div class='ftree_grandparent'>" + gp.expand_atpaths(cgi.escape(gp.page_name)))
+            if len(gp.father):
+                s.append("<div class='greatgrandparents'>" + gp.resolve_info('father') + "</div>")
+            if len(gp.mother):
+                s.append("<div class='greatgrandparents'>" + gp.resolve_info('mother') + "</div>")
+            s.append("</div>")
+
+        s.append("<div class='ftree'>")
+        if not ((ff is None) and (fm is None)):
+            s.append("<div class='ftree_paternal_grandparents'>")
+            do_grandparent(ff)
+            do_grandparent(fm)
+            s.append("</div>")
+        if not ((mf is None) and (mm is None)):
+            s.append("<div class='ftree_maternal_grandparents'>")
+            do_grandparent(mf)
+            do_grandparent(mm)
+            s.append("</div>")
+        if not ((f is None) and (m is None)):
+            s.append("<div class='ftree_parents'>")
+            if not (f is None):
+                s.append("<div>" + f.expand_atpaths(cgi.escape(f.page_name)) + "</div>")
+            if not (m is None):
+                s.append("<div>" + m.expand_atpaths(cgi.escape(m.page_name)) + "</div>")
+            s.append("</div>")
+        s.append("<div class='ftree_central'>" + cgi.escape(self.name[0]) + "</div>") # no need to self-link
+        s.append("</div>")
+        return "".join(s)
+
     def turn_page_into_html(self):
         outlines = []
         outlines.append("<title>" + self.page_name + "</title>")
         self.header_stuff(outlines)
+        outlines.append(self.generate_ancestors_compact_html())
         outlines.append("<div class='text'>")
         if self.info.has_key('isform'):
             outlines.append("<table cellpadding=0 cellborders=0>")
@@ -237,7 +301,7 @@ def make_relationship_index():
         if not f.endswith('.html'):
             continue
         at_path = '@' + f[:-5]
-        p = Page(at_path)
+        p = Page.find(at_path)
 
         for parent in p.father:
             add_value(at_path, 'father', parent)
@@ -254,4 +318,5 @@ def make_relationship_index():
 
 if __name__ == '__main__':
     import sys
-    make_relationship_index()
+    # make_relationship_index()
+    print Page.find('GersonGreene').generate_ancestors_compact_html()

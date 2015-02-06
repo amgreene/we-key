@@ -21,7 +21,7 @@ def reindex():
 def do_name(name):
     csslink = '<link rel="stylesheet" type="text/css" href="static/g.css">'
     csslink += '<script src="//use.edgefonts.net/alegreya;shanti.js"></script>'
-    page = Page(name)
+    page = Page.find(name)
     return (csslink + 
             page.turn_page_into_html() +
             "<hr>Tools: <a target='_blank' href='/reindex'>Re-index</a>"
@@ -29,4 +29,3 @@ def do_name(name):
 
 if __name__ == "__main__":
     app.run()
-    

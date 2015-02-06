@@ -11,7 +11,8 @@ INFRASTRUCTURE
 ARCHITECTURE
 
 # Page object should lazyload
-# make Page act more databasey (linking to others, etc.) (watch out for greediness!)
+# make Page act more databasey (linking to others, etc.)
+# Make cleaner distinction between AtPath instances and Page instances
 # Serve up images (by proxying if needed)
 
 DATA AND METADATA
@@ -36,8 +37,9 @@ DATA VALIDATION
 
 AUTO-GENERATED CONTENT SUMMARY
 
-# display family tree
-# display list of children in a more useful form
+# Generalize ancestors minitree so it doesn't assume at most one each of father, mother
+# Ancestors could display one more generation by using parens and commas immediately after each grgrp's name
+# Display compact list of descendants under the ancestors list
 # Complete life chronology
 
 APPEARANCE
@@ -75,7 +77,8 @@ Sprint 2 -- in process
 # DONE The indexes should be JSON
 # DONE Generate a relationship index alongside the general-purpose xref index
 # DONE display list of children (computed) (proof of data flow)
-
+# DONE cache page objects once loaded
+# DONE display compact list of ancestors in upper right
 
 Sprint 1 -- 2014-02-04
 
