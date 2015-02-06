@@ -13,7 +13,7 @@ ARCHITECTURE
 # Page object should lazyload
 # make Page act more databasey (linking to others, etc.)
 # Make cleaner distinction between AtPath instances and Page instances
-# Serve up images (by proxying if needed)
+# Demote __getattr__ from Page to Info
 
 DATA AND METADATA
 
@@ -69,7 +69,11 @@ NAVIGATION
 
 ----------------------------------------------------------------------
 
-Sprint 2 -- in process
+Sprint 3 -- in process
+
+# DONE Serve up images (simply for now)
+
+Sprint 2 -- 2014-02-05
 
 # DONE If it's a @FooBar, then when pretty-printing it insert spaces
 # DONE add "last modified" timestamp to bottom of page

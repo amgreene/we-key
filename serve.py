@@ -1,5 +1,5 @@
-from fwpage import Page, make_index, make_relationship_index
-from flask import Flask
+from fwpage import Page, locate_image, make_index, make_relationship_index
+from flask import Flask, send_file
 app = Flask(__name__)
 app.debug = True
 
@@ -16,6 +16,10 @@ def reindex():
     make_index()
     make_relationship_index()
     return 'Indexed.'
+
+@app.route("/img/<key>")
+def serve_image(key):
+    return send_file(locate_image(key))
 
 @app.route("/<name>")
 def do_name(name):

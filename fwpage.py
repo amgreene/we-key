@@ -316,6 +316,14 @@ def make_relationship_index():
     with codecs.open(os.path.join(data_dir, 'relationships.json'), 'w', 'utf-8') as o:
         json.dump(refs, o, ensure_ascii=False, indent=2, sort_keys=True)
 
+img_dir = '/data/amg/dropbox/Genealogy/'
+
+def locate_image(key):
+    for line in data_open('images-index.txt'):
+        if line.startswith(key + ' '):
+            return os.path.join(img_dir, line.split(' ')[1]).strip()
+    return None
+
 if __name__ == '__main__':
     import sys
     # make_relationship_index()
