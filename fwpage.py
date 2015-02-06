@@ -10,11 +10,18 @@ data_dir = '/data/amg/Dropbox/Genealogy/web/'
 def data_open(file_name):
     return codecs.open(os.path.join(data_dir, file_name), 'r', 'utf-8')
 
+def uncamel_case(s):
+    s = re.sub('([a-z])([A-Z])', r'\1 \2', s)
+    s = re.sub('([0-9])([a-zA-Z])', r'\1 \2', s)
+    s = re.sub('([a-zA-Z])([0-9])', r'\1 \2', s)
+    return s
+
 class Page:
     def __init__(self, page_name):
         self.info = collections.defaultdict(list)
         self.text = []
         self.xrefs = []
+        self.relations = {}
         self.page_name = page_name
 
         if '.' in page_name:
@@ -54,7 +61,7 @@ class Page:
             for line in data_open('etc.html'):
                 if line.startswith(at_path + ' '):
                     return line.split(' ', 1)[1]
-            return at_path
+            return uncamel_case(at_path)
         
     def find_extended_name_for(self, at_path):
         try:
@@ -72,15 +79,13 @@ class Page:
             for line in data_open('etc.html'):
                 if line.startswith('@' + at_path + ' '):
                     return line.split(' ', 1)[1]
-            return at_path
+            return uncamel_case(at_path)
         
     def load(self, file_name):
         if not os.path.exists(os.path.join(data_dir, file_name)):
             # No file backs up this at_path
             # So just take the atpath itself, and insert spaces where there's camel-casing
-            self.info['name'] = [re.sub('([a-z0-9])([A-Z])', r'\1 \2', 
-                                        (file_name.split('.')[0]))
-                             ]
+            self.info['name'] = [uncamel_case(file_name.split('.')[0])]
             # no file means no mtime
             self.mtime = ''
             return
@@ -117,19 +122,13 @@ class Page:
 
     # TO DO -- if an @Name can be resolved, use the person's real name. Otherwise, expand out the camel case
     def resolve_info(self, key):
-        def do_lookup(at_path):
-            at_path = at_path.group(1)
-            return "<a href='" + at_path + "'>" + self.find_extended_name_for(at_path) + "</a>"
-        s = ''.join([cgi.escape(s) for s in self.info[key]])
-        s = re.sub(r'@(\S+) qua{(.*?)}', r'<a href="\1">\2</a>', s)
-        s = re.sub(r'@(\S+)', do_lookup, s) # r'<a href="\1">\1</a>', s)
-        return s
+        s = ', '.join([cgi.escape(s) for s in self.info[key]])
+        return self.expand_atpaths(s)
 
-    def resolve_value(self, val):
+    def expand_atpaths(self, s):
         def do_lookup(at_path):
             at_path = at_path.group(1)
             return "<a href='" + at_path + "'>" + self.find_extended_name_for(at_path) + "</a>"
-        s = cgi.escape(val)
         s = re.sub(r'@(\S+) qua{(.*?)}', r'<a href="\1">\2</a>', s)
         s = re.sub(r'@(\S+)', do_lookup, s) # r'<a href="\1">\1</a>', s)
         return s
@@ -153,11 +152,11 @@ class Page:
             outlines.append("<div class='parent mother'>Mother: " + self.resolve_info('mother') + "</div>")
         if self.relations.has_key('children'):
             outlines.append("<div class='children'>Children: " + ", ".join([
-                self.resolve_value(child_path) for child_path in self.relations['children']
+                self.expand_atpaths(cgi.escape(child_path)) for child_path in self.relations['children']
                 ]) + "</div>")
         if len(self.xrefs):
             outlines.append("<div class='xrefs'>Referenced by: " + ', '.join(
-                self.resolve_value(v) for v in self.xrefs
+                self.expand_atpaths(cgi.escape(v)) for v in self.xrefs
             ) + "</div>")
         outlines.append("</div>")
 
@@ -166,8 +165,7 @@ class Page:
 
         line = re.sub(r'\\addr\{(.*?)\}', r'<span class="addr">\1</a>', line)
         line = re.sub(r'\\age\{(.*?)\}', r'\1', line) # TO DO --> implied birth year
-        line = re.sub(r'@(\S+) qua{(.*?)}', r'<a href="\1">\2</a>', line)
-        line = re.sub(r'@(\S+)', r'<a href="\1">\1</a>', line)
+        line = self.expand_atpaths(line)
         line = re.sub(r'(\d{4}-\d{2}-\d{2})', r'<span class="date">\1</span>', line)
 
         if self.info.has_key('isform'):
