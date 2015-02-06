@@ -31,7 +31,7 @@ class Page:
             file_name = file_name[1:]
         self.load(file_name)
         
-        with codecs.open(os.path.join(data_dir, 'xrefs.txt'), 'r', 'utf-8') as x_file:
+        with codecs.open(os.path.join(data_dir, 'xrefs.json'), 'r', 'utf-8') as x_file:
             self.xrefs = json.load(x_file).get(page_name, [])
         with codecs.open(os.path.join(data_dir, 'relationships.json'), 'r', 'utf-8') as x_file:
             self.relations = json.load(x_file).get('@' + page_name, {})
@@ -86,6 +86,7 @@ class Page:
             return
         self.mtime = datetime.datetime.fromtimestamp(
             os.path.getmtime(os.path.join(data_dir, file_name))).strftime('%Y-%m-%d %H:%M:%S')
+        current_key = ''
         for line in data_open(file_name):
             line = line.rstrip()
             if line == '':
@@ -97,8 +98,17 @@ class Page:
                     key=line[1:]
                     value=True
                 self.info[key].append(value)
+                current_key = key + "/" + unicode(value)  # kludge to get the format right; should be an object
+            elif line.lstrip()[0] == '\\': # indented -- for now, we're not recursing, but we should
+                if '=' in line:
+                    (key, value) = line.lstrip()[1:].split('=', 2)
+                else:
+                    key=line.lstrip()[1:]
+                    value=True
+                self.info[current_key + "/" + key].append(value) # klude; see above
             else:
                 self.text.append(line)
+                current_key = ''
 
     def __getattr__(self, name):
         if self.info.has_key(name):
@@ -212,7 +222,7 @@ def make_index():
                 refs[m].add('@' + f[:-5])
     
     converted_refs = dict([(k, sorted(list(v))) for (k, v) in refs.items()])
-    with codecs.open(os.path.join(data_dir, 'xrefs.txt'), 'w', 'utf-8') as o:
+    with codecs.open(os.path.join(data_dir, 'xrefs.json'), 'w', 'utf-8') as o:
         json.dump(converted_refs, o, ensure_ascii=False, indent=2, sort_keys=True)
 
 def make_relationship_index():

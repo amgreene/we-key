@@ -16,12 +16,14 @@ ARCHITECTURE
 
 DATA AND METADATA
 
+# How to handle structured info better (e.g. marriage) by using indentation
+# any info can have metadata
+# this means that info values are themselves classes (and info is probably that class too)
 # support for confidence levels
 # support for external URLs
 # Turn street addresses into @paths
 # Need to allow for escaped @?
 # tag \source for data
-# any info can have metadata
 # within a document, be able to mark blocks as being \about @people
 # schema to validate info tags
 # make text (and info?) a structured tree, with {} designating atoms?
@@ -29,7 +31,6 @@ DATA AND METADATA
 
 DATA VALIDATION
 
-# How to handle structured info better (e.g. marriage) by using indentation
 # Validate @paths
 # Check that marriages are symmetrical
 # Check that children are born a reasonable time after their parents
