@@ -21,7 +21,6 @@ DATA AND METADATA
 # this means that info values are themselves classes (and info is probably that class too)
 # support for confidence levels
 # support for external URLs
-# Turn street addresses into @paths
 # Need to allow for escaped @?
 # tag \source for data
 # within a document, be able to mark blocks as being \about @people
@@ -47,7 +46,6 @@ APPEARANCE
 # "Header" stuff on the side, not the top
 # Head shot/primary image
 # Make display of auto-indexed xref links sensitive to the type of xref document
-# Fix scope of <a> tag for name when expanding it to include "child of" (parents should be their own links)
 # jquery?
 # Smallcaps for last names?
 
@@ -56,6 +54,7 @@ NAVIGATION
 # Search site (using regex)
 # Add support for internal TOC within text
 # "list of all people/documents" (sortable by name, location, modified stamp, birth date, record date, etc.)
+# Auto-link dates into chronology
 
 ----------------------------------------------------------------------
 

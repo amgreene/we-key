@@ -14,6 +14,7 @@ def uncamel_case(s):
     s = re.sub('([a-z])([A-Z])', r'\1 \2', s)
     s = re.sub('([0-9])([a-zA-Z])', r'\1 \2', s)
     s = re.sub('([a-zA-Z])([0-9])', r'\1 \2', s)
+    s = re.sub('-', ' ', s)
     return s
 
 class Page:
@@ -128,7 +129,7 @@ class Page:
     def expand_atpaths(self, s):
         def do_lookup(at_path):
             at_path = at_path.group(1)
-            return "<a href='" + at_path + "'>" + self.find_extended_name_for(at_path) + "</a>"
+            return "<a href='" + at_path + "'>" + self.find_name_for(at_path) + "</a>"
         s = re.sub(r'@(\S+) qua{(.*?)}', r'<a href="\1">\2</a>', s)
         s = re.sub(r'@(\S+)', do_lookup, s) # r'<a href="\1">\1</a>', s)
         return s
