@@ -1,4 +1,4 @@
-from fwpage import Page, locate_image, make_index, make_relationship_index
+from fwpage import Page, locate_image, make_index, make_relationship_index, html_index_images
 from flask import Flask, send_file
 app = Flask(__name__)
 app.debug = True
@@ -16,6 +16,12 @@ def reindex():
     make_index()
     make_relationship_index()
     return 'Indexed.'
+
+@app.route("/index/images")
+def serve_image_list():
+    csslink = '<link rel="stylesheet" type="text/css" href="static/g.css">'
+    csslink += '<script src="//use.edgefonts.net/alegreya;shanti.js"></script>'
+    return csslink + html_index_images()
 
 @app.route("/img/<key>")
 def serve_image(key):

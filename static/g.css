@@ -53,6 +53,12 @@ div.text a
   color: black;
 }
 
+img.img_on_page {
+    max-height: 200px; 
+    max-width: 200px; 
+    margin: 12px;
+}
+
 /* Family tree compact representation */
 
 div.ftree

@@ -269,6 +269,7 @@ class Page:
         for line in data_open('images-index.txt'):
             splits = line.split(' ')
             if re.sub('@', '', splits[0]) == self.page_name:
+                outlines.append("<img class='img_on_page' src='/img/" + self.page_name + "'><br>")
                 for url in splits[1:]:
                     outlines.append("<img src='" + url + "'><br>")
 
@@ -317,6 +318,15 @@ def make_relationship_index():
         json.dump(refs, o, ensure_ascii=False, indent=2, sort_keys=True)
 
 img_dir = '/data/amg/dropbox/Genealogy/'
+
+def html_index_images():
+    outlines = []
+    outlines.append("<html><body>")
+    for line in data_open('images-index.txt'):
+        (key, path) = line.strip().split(' ', 1)
+        outlines.append('<a href="/' + key + '">'+key+'</a>')
+    outlines.append("</body></html>")
+    return '<br>'.join(outlines)
 
 def locate_image(key):
     for line in data_open('images-index.txt'):
