@@ -51,6 +51,8 @@ div.header
 div.text table tr td
 {
   color: black;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
 }
 
 div.text

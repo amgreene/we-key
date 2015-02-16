@@ -10,6 +10,8 @@ data_dir = '/data/amg/Dropbox/Genealogy/web/'
 def data_open(file_name):
     return codecs.open(os.path.join(data_dir, file_name), 'r', 'utf-8')
 
+at_path_re = r'@([-A-Za-z0-9_]+)'
+
 def uncamel_case(s):
     s = re.sub('([a-z])([A-Z])', r'\1 \2', s)
     s = re.sub('([0-9])([a-zA-Z])', r'\1 \2', s)
@@ -221,7 +223,7 @@ class Page:
         def do_lookup(at_path):
             at_path = at_path.group(1)
             return "<a href='" + at_path + "'>" + self.find_name_for(at_path) + "</a>"
-        s = re.sub(r'@(\S+) qua{(.*?)}', r'<a href="\1">\2</a>', s)
+        s = re.sub(r'@(\S+) ?\\?qua{(.*?)}', r'<a href="\1">\2</a>', s)
         s = re.sub(r'@(\S+)', do_lookup, s) # r'<a href="\1">\1</a>', s)
         return s
 
@@ -265,6 +267,8 @@ class Page:
             if ': ' in line:
                 html += "<tr><td>" + self.expand_references(re.sub(r': (.*)', r':</td><td><b>\1</b>', line)) + "</td></tr>"
             else:
+                if line.strip() == '':
+                    line = '&nbsp;' # leave a blank line
                 html += "<tr><td colspan=2>" + self.expand_references(line) + "</td></tr>"
         if self.has_key('original'):
             html += "<div class='originals'>"
@@ -399,7 +403,7 @@ def make_index():
         if not f.endswith('.html'):
             continue
         for line in data_open(f):
-            for m in re.findall(r'@(\S+)', line):
+            for m in re.findall(at_path_re, line):
                 refs[m].add('@' + f[:-5])
     
     converted_refs = dict([(k, sorted(list(v))) for (k, v) in refs.items()])
@@ -450,7 +454,7 @@ def html_index_tags():
         tags.add(f[:-5])
         pages.add(f[:-5])
         for line in data_open(f):
-            for m in re.findall(r'@(\S+)', line):
+            for m in re.findall(at_path_re, line):
                 tags.add(m)
 
     outlines = []
