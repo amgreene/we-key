@@ -17,6 +17,26 @@ def uncamel_case(s):
     s = re.sub('-', ' ', s)
     return s
 
+class Info:
+    def __init__(self):
+        self.data = collections.defaultdict(list)
+
+    def add(self, key, value):
+        self.data[key].append(value)
+
+    def get(self, key):
+        return self.data[key]
+
+    def has_key(self, key):
+        return self.data.has_key(key)
+
+# This once seemed like a good idea, because it would make the calling code more readable
+# But in practice, the problems seem to outweigh the benefit
+#    def __getattr__(self, name):
+#        if self.info.has_key(name):
+#            return self.info[name]
+#        return []
+
 class Page:
     cache = {}
 
@@ -25,7 +45,7 @@ class Page:
         return Page.cache.get(page_name, Page(page_name))
 
     def __init__(self, page_name):
-        self.info = collections.defaultdict(list)
+        self.info = Info()
         self.text = []
         self.xrefs = []
         self.relations = {}
@@ -57,6 +77,9 @@ class Page:
     def __str__(self):
         return str(unicode(self))
 
+    def get(self, key):
+        return self.info.get(key)
+
     def find_name_for(self, at_path):
         try:
             at_path2 = at_path
@@ -76,8 +99,8 @@ class Page:
             at_page = Page.find(at_path)
             n = at_page.name[0]
             parents = []
-            parents += at_page.father
-            parents += at_page.mother
+            parents += at_page.get('father')
+            parents += at_page.get('mother')
             if len(parents):
                 n += " (Child of " + ", ".join([
                     self.find_name_for(p) for p in parents
@@ -93,7 +116,7 @@ class Page:
         if not os.path.exists(os.path.join(data_dir, file_name)):
             # No file backs up this at_path
             # So just take the atpath itself, and insert spaces where there's camel-casing
-            self.info['name'] = [uncamel_case(file_name.split('.')[0])]
+            self.info.add('name', uncamel_case(file_name.split('.')[0]))
             # no file means no mtime
             self.mtime = ''
             return
@@ -110,7 +133,7 @@ class Page:
                 else:
                     key=line[1:]
                     value=True
-                self.info[key].append(value)
+                self.info.add(key, value)
                 current_key = key + "/" + unicode(value)  # kludge to get the format right; should be an object
             elif line.lstrip()[0] == '\\': # indented -- for now, we're not recursing, but we should
                 if '=' in line:
@@ -118,19 +141,14 @@ class Page:
                 else:
                     key=line.lstrip()[1:]
                     value=True
-                self.info[current_key + "/" + key].append(value) # klude; see above
+                self.info.add(current_key + "/" + key, value) # kludge; see above
             else:
                 self.text.append(line)
                 current_key = ''
 
-    def __getattr__(self, name):
-        if self.info.has_key(name):
-            return self.info[name]
-        return []
-
     # TO DO -- if an @Name can be resolved, use the person's real name. Otherwise, expand out the camel case
     def resolve_info(self, key):
-        s = ', '.join([cgi.escape(s) for s in self.info[key]])
+        s = ', '.join([cgi.escape(s) for s in self.info.get(key)])
         return self.expand_atpaths(s)
 
     def expand_atpaths(self, s):
@@ -196,9 +214,9 @@ class Page:
         if path == '':
             return x
         if path[0] == 'm':
-            return self.find_ancestor_by_path(path[1:], (x.mother + [None])[0])
+            return self.find_ancestor_by_path(path[1:], (x.get('mother') + [None])[0])
         if path[0] == 'f':
-            return self.find_ancestor_by_path(path[1:], (x.father + [None])[0])
+            return self.find_ancestor_by_path(path[1:], (x.get('father') + [None])[0])
         return None
 
     def generate_ancestors_compact_html(self):
@@ -214,9 +232,9 @@ class Page:
             if gp is None:
                 return
             s.append("<div class='ftree_grandparent'>" + gp.expand_atpaths(cgi.escape(gp.page_name)))
-            if len(gp.father):
+            if len(gp.get('father')):
                 s.append("<div class='greatgrandparents'>" + gp.resolve_info('father') + "</div>")
-            if len(gp.mother):
+            if len(gp.get('mother')):
                 s.append("<div class='greatgrandparents'>" + gp.resolve_info('mother') + "</div>")
             s.append("</div>")
 
@@ -238,7 +256,7 @@ class Page:
             if not (m is None):
                 s.append("<div>" + m.expand_atpaths(cgi.escape(m.page_name)) + "</div>")
             s.append("</div>")
-        s.append("<div class='ftree_central'>" + cgi.escape(self.name[0]) + "</div>") # no need to self-link
+        s.append("<div class='ftree_central'>" + cgi.escape(self.get('name')[0]) + "</div>") # no need to self-link
         s.append("</div>")
         return "".join(s)
 
@@ -304,13 +322,13 @@ def make_relationship_index():
         at_path = '@' + f[:-5]
         p = Page.find(at_path)
 
-        for parent in p.father:
+        for parent in p.get('father'):
             add_value(at_path, 'father', parent)
             add_value(parent, 'children', at_path)
-        for parent in p.mother:
+        for parent in p.get('mother'):
             add_value(at_path, 'mother', parent)
             add_value(parent, 'children', at_path)
-        for spouse in p.married:
+        for spouse in p.get('married'):
             add_value(at_path, 'spouses', spouse)
             add_value(spouse, 'spouses', at_path)
     

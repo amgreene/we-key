@@ -15,6 +15,12 @@ ARCHITECTURE
 # Make cleaner distinction between AtPath instances and Page instances
 # Demote __getattr__ from Page to Info
 
+ACTUAL DATA
+
+# Add Birth (done), Death, Marriage, Travel, Naturalization, etc. images to index
+# Start conerting people data
+# Start converting/writing essays
+
 DATA AND METADATA
 
 # How to handle structured info better (e.g. marriage) by using indentation
@@ -26,8 +32,9 @@ DATA AND METADATA
 # tag \source for data
 # within a document, be able to mark blocks as being \about @people
 # schema to validate info tags
-# make text (and info?) a structured tree, with {} designating atoms?
+# make text (and info?) a structured tree, with {} designating atoms
 # Implicit identification of family name vs given name?
+# \[citation] within data, to be turned into HTML decorations
 
 DATA VALIDATION
 
@@ -72,6 +79,7 @@ NAVIGATION
 Sprint 3 -- in process
 
 # DONE Serve up images (simply for now)
+# DONE Refactor so Info is a class (which will allow for recursion, but this item is just the refactoring with no new behavior)
 
 Sprint 2 -- 2014-02-05
 
