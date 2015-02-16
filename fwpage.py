@@ -80,7 +80,7 @@ class Page:
 
     def __init__(self, page_name):
         self.info = Info()
-        self.text = []
+        self.text = ''
         self.xrefs = []
         self.relations = {}
         self.page_name = page_name
@@ -171,7 +171,8 @@ class Page:
         for line in data_open(file_name):
             line = line.rstrip()
             if line == '':
-                self.text.append(line)
+                if self.text:
+                    self.text += '\n' # blank line (but not at the beginning)
             elif line[0] == '\\':
                 if '=' in line:
                     (key, value) = line[1:].split('=', 2)
@@ -194,7 +195,7 @@ class Page:
                 current_infos[-1].add(key, value) # kludge; see above
             else:
                 current_infos = [] # anything that isn't an info resets the infos stack
-                self.text.append(line)
+                self.text += line + '\n' # we've eliminated trailing spaces but not the newline
 
     # TO DO -- if an @Name can be resolved, use the person's real name. Otherwise, expand out the camel case
     def resolve_info(self, key):
@@ -251,28 +252,39 @@ class Page:
             ) + "</div>")
         outlines.append("</div>")
 
-    def format_one_line(self, line):
-        # line = cgi.escape(line)
-
+    def expand_references(self, line):
         line = re.sub(r'\\addr\{(.*?)\}', r'<span class="addr">\1</a>', line)
         line = re.sub(r'\\age\{(.*?)\}', r'\1', line) # TO DO --> implied birth year
         line = self.expand_atpaths(line)
         line = re.sub(r'(\d{4}-\d{2}-\d{2})', r'<span class="date">\1</span>', line)
-
-        if line.startswith('.heading '):
-            line = '<h2>' + line[9:] + '</h2>'
-        elif line.startswith('* '):
-            line = '<li>' + line[2:] + '</li>'
-
-        if self.info.has_key('isform'):
-            if ': ' in line:
-                line = "<tr><td>" + re.sub(r': (.*)', r':</td><td><b>\1</b>', line) + "</td></tr>"
-            else:
-                line = "<tr><td colspan=2>" + line + "</td></tr>"
-        else:
-            line += "<br>"
-
         return line
+
+    def format_form(self):
+        html = ''
+        for line in self.text.split('\n'):
+            if ': ' in line:
+                html += "<tr><td>" + self.expand_references(re.sub(r': (.*)', r':</td><td><b>\1</b>', line)) + "</td></tr>"
+            else:
+                html += "<tr><td colspan=2>" + self.expand_references(line) + "</td></tr>"
+        return html
+
+    def format_text(self):
+        if self.has_key('isform'):
+            return self.format_form()
+        paragraphs = self.text.split('\n\n')
+        html = ''
+        for p in paragraphs:
+            p_type = 'p'
+            if p.startswith('.heading '):
+                p_type = 'h2'
+                p = p[9:]
+            elif p.startswith('* '):
+                p_type = 'ul'
+                # replace * with li elements as appropriate
+                p = '\n'.join(['<li>' + re.sub(r'^\* ', '', x) + '</li>' for x in p.split('\n')])
+            html += "<" + p_type + ">" + self.expand_references(p) + "</" + p_type + ">\n"
+        return html
+        # TODO - forms / tables
 
     def find_ancestor_by_path(self, path, x='self'):
         if x is None:
@@ -339,11 +351,9 @@ class Page:
         if self.info.has_key('isform'):
             outlines.append("<table cellpadding=0 cellborders=0>")
         is_stub = True
-        for line in self.text:
-            formatted_line = self.format_one_line(line)
-            if len(formatted_line.strip()):
-                is_stub = False
-            outlines.append(formatted_line)
+        outlines.append(self.format_text())
+        if self.text.strip() != '':
+            is_stub = False
         if self.info.has_key('isform'):
             outlines.append("</table>")
         if is_stub:
