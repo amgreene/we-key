@@ -17,6 +17,7 @@ def uncamel_case(s):
     s = re.sub('([0-9])([a-zA-Z])', r'\1 \2', s)
     s = re.sub('([a-zA-Z])([0-9])', r'\1 \2', s)
     s = re.sub('-', ' ', s)
+    s = re.sub('_', ' ', s)
     return s
 
 class Info:
@@ -219,6 +220,7 @@ class Page:
         s = ', '.join([pretty_print_with_metadata(i) for i in self.info.get_with_metadata(key)])
         return self.expand_atpaths(s)
 
+
     def expand_atpaths(self, s):
         def do_lookup(at_path):
             at_path = at_path.group(1)
@@ -240,14 +242,20 @@ class Page:
             outlines.append("<div class='married'>Married " + self.resolve_info('married') + "</div>")
         if self.info.has_key('died'):
             outlines.append("<div class='died'>Died " + self.resolve_info('died') + "</div>")
-        if self.info.has_key('father'):
-            outlines.append("<div class='parent father'>Father: " + self.resolve_info('father') + "</div>")
-        if self.info.has_key('mother'):
-            outlines.append("<div class='parent mother'>Mother: " + self.resolve_info('mother') + "</div>")
+#        if self.info.has_key('father'):
+#            outlines.append("<div class='parent father'>Father: " + self.resolve_info('father') + "</div>")
+#        if self.info.has_key('mother'):
+#            outlines.append("<div class='parent mother'>Mother: " + self.resolve_info('mother') + "</div>")
         if self.relations.has_key('children'):
             outlines.append("<div class='children'>Children: " + ", ".join([
                 self.expand_atpaths(cgi.escape(child_path)) for child_path in self.relations['children']
                 ]) + "</div>")
+        
+        if self.has_key('residence'):
+            outlines.append("<div class='residence'>Residence: " + ", ".join([
+                self.expand_atpaths(cgi.escape(r)) for r in self.get('residence')
+                ]) + "</div>")
+        
         if len(self.xrefs):
             outlines.append("<div class='xrefs'>Referenced by: " + ', '.join(
                 self.expand_atpaths(cgi.escape(v)) for v in self.xrefs

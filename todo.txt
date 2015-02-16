@@ -25,6 +25,7 @@ ACTUAL DATA
 DATA AND METADATA
 
 # parse text into a structured tree AT LOAD TIME, with {} designating atoms etc., and then render *that*
+# Correct formatting of quas.
 # support for confidence levels
 # support for external URLs
 # Need to allow for escaped @?
