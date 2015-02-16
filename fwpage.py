@@ -266,6 +266,16 @@ class Page:
                 html += "<tr><td>" + self.expand_references(re.sub(r': (.*)', r':</td><td><b>\1</b>', line)) + "</td></tr>"
             else:
                 html += "<tr><td colspan=2>" + self.expand_references(line) + "</td></tr>"
+        if self.has_key('original'):
+            html += "<div class='originals'>"
+            for img in self.get('original'):
+                if img.startswith('@'):
+                    img = img[1:]
+                html += "<a href='/img/" + img + "'><img src='/img/" + img + "' /></a>"
+                #print img
+                #for u in self.get_image_urls(img):
+                #    html += "<a href='" + u + "'><img src='" + u + "' /></a>"
+            html += "</div>"
         return html
 
     def format_text(self):
@@ -284,7 +294,6 @@ class Page:
                 p = '\n'.join(['<li>' + re.sub(r'^\* ', '', x) + '</li>' for x in p.split('\n')])
             html += "<" + p_type + ">" + self.expand_references(p) + "</" + p_type + ">\n"
         return html
-        # TODO - forms / tables
 
     def find_ancestor_by_path(self, path, x='self'):
         if x is None:
@@ -341,6 +350,16 @@ class Page:
         s.append("<div class='ftree_central'>" + cgi.escape(self.name()) + "</div>") # no need to self-link
         s.append("</div>")
         return "".join(s)
+
+    def get_image_urls(self, key):
+        if key.startswith('@'):
+            key = key[1:]
+        urls = []
+        for line in data_open('images-index.txt'):
+            splits = line.strip().split(' ')
+            if re.sub('@', '', splits[0]) == key:
+                urls += splits[1:]
+        return ['/img/' + u for u in urls]
 
     def turn_page_into_html(self):
         outlines = []

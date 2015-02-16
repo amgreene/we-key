@@ -24,7 +24,7 @@ ACTUAL DATA
 
 DATA AND METADATA
 
-# parse text into a structured tree, with {} designating atoms etc., and then render *that*
+# parse text into a structured tree AT LOAD TIME, with {} designating atoms etc., and then render *that*
 # support for confidence levels
 # support for external URLs
 # Need to allow for escaped @?
@@ -99,6 +99,8 @@ Sprint 4 -- ongoing
 # DONE Make index pages easier to get to
 # DONE Indicate (in the index) which links are stubs that need populating
 # DONE Some wiki-like markup -- * for bullet list, .heading for h2
+# DONE Parse text into tree and format that -- first pass at such a refactoring
+# DONE Display original image next to transcribed form
 
 Sprint 3 -- 2014-02-16
 

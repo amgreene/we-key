@@ -24,6 +24,20 @@ a.stub, a.stub:visited
   font-style: italic;
 }
 
+div.originals
+{
+  position: absolute;
+  right: 20px;
+  top: 80px;
+}
+
+div.originals a img
+{
+  max-width: 500px;
+  max-height: 800px;
+  border: none;
+}
+
 div.name
 {
   font-size: 36pt;
