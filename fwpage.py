@@ -199,7 +199,14 @@ class Page:
     # TO DO -- if an @Name can be resolved, use the person's real name. Otherwise, expand out the camel case
     def resolve_info(self, key):
         def pretty_print_with_metadata(i):
-            s = cgi.escape(unicode(i))
+            s = ''
+            try:
+                if i == True:
+                    pass
+                else:
+                    s = cgi.escape(unicode(i))  # if i can't be cast to a unicode object for some reason....
+            except:
+                pass
             if i.has_key('date'):
                 s += " on " + cgi.escape(unicode(i.get('date')[0]))
             if i.has_key('place'):

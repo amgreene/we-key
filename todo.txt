@@ -24,13 +24,13 @@ ACTUAL DATA
 
 DATA AND METADATA
 
+# parse text into a structured tree, with {} designating atoms etc., and then render *that*
 # support for confidence levels
 # support for external URLs
 # Need to allow for escaped @?
 # tag \source for data
 # within a document, be able to mark blocks as being \about @people
 # schema to validate info tags
-# parse text into a structured tree, with {} designating atoms etc., and then render *that*
 # Implicit identification of family name vs given name?
 # \[citation] within data, to be turned into HTML decorations
 # Clean up all places where I'm currently forcing info to have a single value by using [0] to get only the first
