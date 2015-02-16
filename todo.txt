@@ -17,8 +17,10 @@ ARCHITECTURE
 ACTUAL DATA
 
 # Add Birth (done), Death, Marriage, Travel, Naturalization, etc. images to index
+# Export images from Ancestry (census, passenger lists, etc.)
 # Start conerting people data
 # Start converting/writing essays
+# Convert tiffs to pngs
 
 DATA AND METADATA
 
@@ -48,6 +50,7 @@ AUTO-GENERATED CONTENT SUMMARY
 
 APPEARANCE
 
+# More wiki-like markup -- some table-like markup
 # Better font choices in css
 # "Header" stuff on the side, not the top
 # Head shot/primary image
@@ -63,6 +66,16 @@ NAVIGATION
 # Add support for internal TOC within text
 # Make master index sortable/filterable by name, location, modified stamp, birth date, record date, etc.
 # Auto-link dates into chronology
+# Index should display additional (distinguishing) features (birth date, parents, etc.)
+# Use of #hashtags?
+
+PREP FOR PUBLIC SHARING
+
+# Privacy controls
+# Access controls
+# Where to store images?
+# How to control uploading of updates? 
+# Opportunities for feedback?
 
 NARRATIVE FLOW
 
@@ -85,6 +98,7 @@ Sprint 4 -- ongoing
 # DONE Make index pages look nicer
 # DONE Make index pages easier to get to
 # DONE Indicate (in the index) which links are stubs that need populating
+# DONE Some wiki-like markup -- * for bullet list, .heading for h2
 
 Sprint 3 -- 2014-02-16
 

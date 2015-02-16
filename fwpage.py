@@ -111,6 +111,9 @@ class Page:
     def __str__(self):
         return str(unicode(self))
 
+    def has_key(self, key):
+        return self.info.has_key(key)
+
     def get(self, key):
         return self.info.get(key)
 
@@ -120,13 +123,21 @@ class Page:
             if at_path2[0] == '@':
                 at_path2 = at_path2[1:]
             at_page = Page.find(at_path2)
-            return at_page.name[0]
+            return at_page.name()
         except Exception as e:
             # print e
             for line in data_open('etc.html'):
                 if line.startswith(at_path + ' '):
                     return line.split(' ', 1)[1]
             return uncamel_case(at_path)
+
+    def name(self):
+        if self.has_key('name'):
+            return self.get('name')[0]
+        for line in data_open('etc.html'):
+            if line.startswith('@' + self.page_name + ' '):
+                return line.split(' ', 1)[1]
+        return uncamel_case(self.page_name)
         
     def find_extended_name_for(self, at_path):
         try:
@@ -234,12 +245,17 @@ class Page:
         outlines.append("</div>")
 
     def format_one_line(self, line):
-        line = cgi.escape(line)
+        # line = cgi.escape(line)
 
         line = re.sub(r'\\addr\{(.*?)\}', r'<span class="addr">\1</a>', line)
         line = re.sub(r'\\age\{(.*?)\}', r'\1', line) # TO DO --> implied birth year
         line = self.expand_atpaths(line)
         line = re.sub(r'(\d{4}-\d{2}-\d{2})', r'<span class="date">\1</span>', line)
+
+        if line.startswith('.heading '):
+            line = '<h2>' + line[9:] + '</h2>'
+        elif line.startswith('* '):
+            line = '<li>' + line[2:] + '</li>'
 
         if self.info.has_key('isform'):
             if ': ' in line:
@@ -303,7 +319,7 @@ class Page:
             if not (m is None):
                 s.append("<div>" + m.expand_atpaths(cgi.escape(m.page_name)) + "</div>")
             s.append("</div>")
-        s.append("<div class='ftree_central'>" + cgi.escape(self.get('name')[0]) + "</div>") # no need to self-link
+        s.append("<div class='ftree_central'>" + cgi.escape(self.name()) + "</div>") # no need to self-link
         s.append("</div>")
         return "".join(s)
 
