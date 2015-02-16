@@ -18,17 +18,51 @@ def uncamel_case(s):
     return s
 
 class Info:
-    def __init__(self):
+    def __init__(self, value=''):
         self.data = collections.defaultdict(list)
+        self.string_value = value
 
+    def __unicode__(self):
+        return self.string_value
+
+    def __str__(self):
+        return str(unicode(self))
+
+    @staticmethod
+    def split_key(key):
+        if '/' in key:
+            return key.split('/', 1)
+        return (key, None)
+        
     def add(self, key, value):
-        self.data[key].append(value)
+        key, subkey = Info.split_key(key)
+        if subkey:
+            # if all we have is a path, assume we're adding to the most recently added one with that key
+            # and make sure that exists!
+            if not self.has_key(key):
+                self.add(key, '')
+            return self.data[key][-1].add(subkey, value)
+        else:
+            new_info = Info(value=value)
+            self.data[key].append(new_info)
+            return new_info
+
+    def get_with_metadata(self, key):
+        key, subkey = Info.split_key(key)
+        if subkey:
+            return self.data[key].get(subkey)
+        else:
+            return self.data[key]
 
     def get(self, key):
-        return self.data[key]
+        return [i.string_value for i in self.get_with_metadata(key)]
 
     def has_key(self, key):
-        return self.data.has_key(key)
+        key, subkey = Info.split_key(key)
+        if subkey:
+            return self.data.get(key).has_key(subkey)
+        else:
+            return self.data.has_key(key)
 
 # This once seemed like a good idea, because it would make the calling code more readable
 # But in practice, the problems seem to outweigh the benefit
@@ -122,7 +156,7 @@ class Page:
             return
         self.mtime = datetime.datetime.fromtimestamp(
             os.path.getmtime(os.path.join(data_dir, file_name))).strftime('%Y-%m-%d %H:%M:%S')
-        current_key = ''
+        current_infos = []
         for line in data_open(file_name):
             line = line.rstrip()
             if line == '':
@@ -133,22 +167,35 @@ class Page:
                 else:
                     key=line[1:]
                     value=True
-                self.info.add(key, value)
-                current_key = key + "/" + unicode(value)  # kludge to get the format right; should be an object
+                current_infos = [self.info.add(key, value)]
             elif line.lstrip()[0] == '\\': # indented -- for now, we're not recursing, but we should
+                info_indent = len(line.split('\\', 1)[0])
+                if info_indent > len(current_infos) + 1:
+                    print "Error: indent is too great"
+                    print line
+                    continue
+                current_infos = current_infos[0:info_indent] # handle "popping" up one or more levels
                 if '=' in line:
                     (key, value) = line.lstrip()[1:].split('=', 2)
                 else:
                     key=line.lstrip()[1:]
                     value=True
-                self.info.add(current_key + "/" + key, value) # kludge; see above
+                current_infos[-1].add(key, value) # kludge; see above
             else:
+                current_infos = [] # anything that isn't an info resets the infos stack
                 self.text.append(line)
-                current_key = ''
 
     # TO DO -- if an @Name can be resolved, use the person's real name. Otherwise, expand out the camel case
     def resolve_info(self, key):
-        s = ', '.join([cgi.escape(s) for s in self.info.get(key)])
+        def pretty_print_with_metadata(i):
+            s = cgi.escape(unicode(i))
+            if i.has_key('date'):
+                s += " on " + cgi.escape(unicode(i.get('date')[0]))
+            if i.has_key('place'):
+                s += " at " + cgi.escape(unicode(i.get('place')[0]))
+            return s
+
+        s = ', '.join([pretty_print_with_metadata(i) for i in self.info.get_with_metadata(key)])
         return self.expand_atpaths(s)
 
     def expand_atpaths(self, s):

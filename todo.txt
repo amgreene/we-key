@@ -13,7 +13,6 @@ ARCHITECTURE
 # Page object should lazyload
 # make Page act more databasey (linking to others, etc.)
 # Make cleaner distinction between AtPath instances and Page instances
-# Demote __getattr__ from Page to Info
 
 ACTUAL DATA
 
@@ -23,18 +22,16 @@ ACTUAL DATA
 
 DATA AND METADATA
 
-# How to handle structured info better (e.g. marriage) by using indentation
-# any info can have metadata
-# this means that info values are themselves classes (and info is probably that class too)
 # support for confidence levels
 # support for external URLs
 # Need to allow for escaped @?
 # tag \source for data
 # within a document, be able to mark blocks as being \about @people
 # schema to validate info tags
-# make text (and info?) a structured tree, with {} designating atoms
+# parse text into a structured tree, with {} designating atoms etc., and then render *that*
 # Implicit identification of family name vs given name?
 # \[citation] within data, to be turned into HTML decorations
+# Clean up all places where I'm currently forcing info to have a single value by using [0] to get only the first
 
 DATA VALIDATION
 
@@ -76,10 +73,13 @@ NAVIGATION
 
 ----------------------------------------------------------------------
 
-Sprint 3 -- in process
+Sprint 3 -- 2014-02-16
 
 # DONE Serve up images (simply for now)
+# DONE Get rid of __getattr__ which was creating more compliations than it was solving
 # DONE Refactor so Info is a class (which will allow for recursion, but this item is just the refactoring with no new behavior)
+# DONE Info should be able to get/set using hierarchical keys, but without breaking existing callers (who expect a list of strings when doing a simple GET)
+# DONE Handle structured info (e.g. marriage) by using indentation
 
 Sprint 2 -- 2014-02-05
 
