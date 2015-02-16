@@ -54,13 +54,20 @@ APPEARANCE
 # Make display of auto-indexed xref links sensitive to the type of xref document
 # jquery?
 # Smallcaps for last names?
+# Tablet-friendly
 
 NAVIGATION
 
+# Auto-update image index with not-yet-indexed files from specific directories
 # Search site (using regex)
 # Add support for internal TOC within text
-# "list of all people/documents" (sortable by name, location, modified stamp, birth date, record date, etc.)
+# Make master index sortable/filterable by name, location, modified stamp, birth date, record date, etc.
 # Auto-link dates into chronology
+
+NARRATIVE FLOW
+
+# Make it possible to layer a guided narrative flow on top of these pages
+# Make that exportable
 
 ----------------------------------------------------------------------
 
@@ -72,6 +79,12 @@ NAVIGATION
 # - Articles
 
 ----------------------------------------------------------------------
+
+Sprint 4 -- ongoing
+
+# DONE Make index pages look nicer
+# DONE Make index pages easier to get to
+# DONE Indicate (in the index) which links are stubs that need populating
 
 Sprint 3 -- 2014-02-16
 

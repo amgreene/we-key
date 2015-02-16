@@ -18,6 +18,12 @@ a:hover
   text-decoration: underline;
 }
 
+a.stub, a.stub:visited
+{
+  color: #d0d0d0;
+  font-style: italic;
+}
+
 div.name
 {
   font-size: 36pt;

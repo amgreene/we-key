@@ -384,6 +384,34 @@ def make_relationship_index():
 
 img_dir = '/data/amg/dropbox/Genealogy/'
 
+def html_index_tags():
+    tags = set()
+    pages = set()
+
+    for line in data_open('images-index.txt'):
+        (key, path) = line.strip().split(' ', 1)
+        tags.add(key)
+
+    for f in os.listdir(data_dir):
+        if not f.endswith('.html'):
+            continue
+        tags.add(f[:-5])
+        pages.add(f[:-5])
+        for line in data_open(f):
+            for m in re.findall(r'@(\S+)', line):
+                tags.add(m)
+
+    outlines = []
+    outlines.append("<html><body>")
+    for key in sorted(tags):
+        if key in pages:
+            is_page = 'page'
+        else:
+            is_page = 'stub'
+        outlines.append('<a class="' + is_page + '" href="/' + key + '">'+key+'</a>')
+    outlines.append("</body></html>")
+    return '<br>'.join(outlines)
+
 def html_index_images():
     outlines = []
     outlines.append("<html><body>")
