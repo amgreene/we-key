@@ -3,7 +3,6 @@ TO DO
 
 INFRASTRUCTURE
 
-# Use config file to locate data directory instead of hardcoded path
 # auto-index when timestamps require it
 # Formalize virtualenv bootstrap
 # Switch to use Twitter Bootstrap
@@ -98,8 +97,13 @@ Sprint 5 -- 2015-05-29 and ongoing
 
 # Redo everything to use Twitter Bootstrap
 # DONE A few quick HTML nicities for & and ' and " and -- 
+# DONE Use config file to locate data directory instead of hardcoded path
+# DONE Support arbitrary URLs (for external links)
+# DONE \i for italics
+# DONE increase font size
+# DONE dotted underlines for links in the main text
 
-[Long break]
+[Long break between sprints 4 and 5]
 
 Sprint 4 -- 2015-02-16
 

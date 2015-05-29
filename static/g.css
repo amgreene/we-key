@@ -25,6 +25,7 @@ a.stub, a.stub:visited
   font-style: italic;
 }
 
+
 div.originals
 {
   position: absolute;
@@ -64,6 +65,7 @@ div.text
   background-color: #ffe;
   color: black;
   width: 640px;
+  font-size: 14pt;
 }
 
 hr
@@ -74,6 +76,14 @@ hr
 div.text a
 {
   color: black;
+  border-bottom: 1px dotted #808080;
+}
+
+div.text a:hover
+{
+  color: blue;
+  text-decoration: none;
+  border-bottom: 1px solid blue;
 }
 
 img.img_on_page {

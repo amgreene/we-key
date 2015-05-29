@@ -8,9 +8,8 @@ import os
 
 from conf import conf
 
-data_dir = '/data/amg/Dropbox/Genealogy/web/'
 def data_open(file_name):
-    return codecs.open(os.path.join(data_dir, file_name), 'r', 'utf-8')
+    return codecs.open(os.path.join(conf['data_dir'], file_name), 'r', 'utf-8')
 
 at_path_re = r'@([-A-Za-z0-9_]+)'
 
@@ -30,6 +29,7 @@ def pretty_html(s):
     s = s.replace('" ', '&rdquo; ')
     # to do: quotes that are not adjacent to a space....
     s = s.replace("--", '&ndash;')
+    s = re.sub(r"\\i{(.*?)}", r"<i>\1</i>", s)
     return s
 
 class Info:
@@ -115,9 +115,9 @@ class Page:
             file_name = file_name[1:]
         self.load(file_name)
         
-        with codecs.open(os.path.join(data_dir, 'xrefs.json'), 'r', 'utf-8') as x_file:
+        with codecs.open(os.path.join(conf['data_dir'], 'xrefs.json'), 'r', 'utf-8') as x_file:
             self.xrefs = json.load(x_file).get(page_name, [])
-        with codecs.open(os.path.join(data_dir, 'relationships.json'), 'r', 'utf-8') as x_file:
+        with codecs.open(os.path.join(conf['data_dir'], 'relationships.json'), 'r', 'utf-8') as x_file:
             self.relations = json.load(x_file).get('@' + page_name, {})
 
     def __unicode__(self):
@@ -173,7 +173,7 @@ class Page:
             return uncamel_case(at_path)
         
     def load(self, file_name):
-        if not os.path.exists(os.path.join(data_dir, file_name)):
+        if not os.path.exists(os.path.join(conf['data_dir'], file_name)):
             # No file backs up this at_path
             # So just take the atpath itself, and insert spaces where there's camel-casing
             self.info.add('name', uncamel_case(file_name.split('.')[0]))
@@ -181,7 +181,7 @@ class Page:
             self.mtime = ''
             return
         self.mtime = datetime.datetime.fromtimestamp(
-            os.path.getmtime(os.path.join(data_dir, file_name))).strftime('%Y-%m-%d %H:%M:%S')
+            os.path.getmtime(os.path.join(conf['data_dir'], file_name))).strftime('%Y-%m-%d %H:%M:%S')
         current_infos = []
         for line in data_open(file_name):
             line = line.rstrip()
@@ -237,8 +237,9 @@ class Page:
         def do_lookup(at_path):
             at_path = at_path.group(1)
             return "<a href='" + at_path + "'>" + self.find_name_for(at_path) + "</a>"
-        s = re.sub(r'@(\S+) ?\\?qua{(.*?)}', r'<a href="\1">\2</a>', s)
-        s = re.sub(r'@(\S+)', do_lookup, s) # r'<a href="\1">\1</a>', s)
+        s = re.sub(r'@{(.*?)} ?\\?qua{(.*?)}', r'<a href="\1">\2</a>', s)
+        s = re.sub(at_path_re + r' ?\\?qua{(.*?)}', r'<a href="\1">\2</a>', s)
+        s = re.sub(at_path_re, do_lookup, s) # r'<a href="\1">\1</a>', s)
         return s
 
     def header_stuff(self, outlines):
@@ -429,7 +430,7 @@ class Page:
 
 def make_index():
     refs = collections.defaultdict(set)
-    for f in os.listdir(data_dir):
+    for f in os.listdir(conf['data_dir']):
         if not f.endswith('.html'):
             continue
         for line in data_open(f):
@@ -437,7 +438,7 @@ def make_index():
                 refs[m].add('@' + f[:-5])
     
     converted_refs = dict([(k, sorted(list(v))) for (k, v) in refs.items()])
-    with codecs.open(os.path.join(data_dir, 'xrefs.json'), 'w', 'utf-8') as o:
+    with codecs.open(os.path.join(conf['data_dir'], 'xrefs.json'), 'w', 'utf-8') as o:
         json.dump(converted_refs, o, ensure_ascii=False, indent=2, sort_keys=True)
 
 def make_relationship_index():
@@ -449,7 +450,7 @@ def make_relationship_index():
             refs[at_path][relationship] = []
         refs[at_path][relationship].append(other_at_path)
 
-    for f in os.listdir(data_dir):
+    for f in os.listdir(conf['data_dir']):
         if not f.endswith('.html'):
             continue
         at_path = '@' + f[:-5]
@@ -465,10 +466,8 @@ def make_relationship_index():
             add_value(at_path, 'spouses', spouse)
             add_value(spouse, 'spouses', at_path)
     
-    with codecs.open(os.path.join(data_dir, 'relationships.json'), 'w', 'utf-8') as o:
+    with codecs.open(os.path.join(conf['data_dir'], 'relationships.json'), 'w', 'utf-8') as o:
         json.dump(refs, o, ensure_ascii=False, indent=2, sort_keys=True)
-
-img_dir = '/data/amg/dropbox/Genealogy/'
 
 def html_index_tags():
     tags = set()
@@ -478,7 +477,7 @@ def html_index_tags():
         (key, path) = line.strip().split(' ', 1)
         tags.add(key)
 
-    for f in os.listdir(data_dir):
+    for f in os.listdir(conf['data_dir']):
         if not f.endswith('.html'):
             continue
         tags.add(f[:-5])
@@ -510,7 +509,7 @@ def html_index_images():
 def locate_image(key):
     for line in data_open('images-index.txt'):
         if line.startswith(key + ' '):
-            return os.path.join(img_dir, line.split(' ')[1]).strip()
+            return os.path.join(conf['img_dir'], line.split(' ')[1]).strip()
     return None
 
 if __name__ == '__main__':

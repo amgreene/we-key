@@ -1,5 +1,7 @@
 conf = {
-  'ga_key': 'Put your Google Analytics key here',
+    'ga_key': 'Put your Google Analytics key here',
+    'img_dir': '',
+    'data_dir': '',
 }
 
 import os
