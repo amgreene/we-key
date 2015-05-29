@@ -20,6 +20,16 @@ def uncamel_case(s):
     s = re.sub('_', ' ', s)
     return s
 
+def pretty_html(s):
+    s = s.replace('&', '&amp;')
+    s = s.replace(" '", ' &lsquo;')
+    s = s.replace("'", '&rsquo;')
+    s = s.replace(' "', ' &ldquo;')
+    s = s.replace('" ', '&rdquo; ')
+    # to do: quotes that are not adjacent to a space....
+    s = s.replace("--", '&ndash;')
+    return s
+
 class Info:
     def __init__(self, value=''):
         self.data = collections.defaultdict(list)
@@ -304,6 +314,7 @@ class Page:
                 p_type = 'ul'
                 # replace * with li elements as appropriate
                 p = '\n'.join(['<li>' + re.sub(r'^\* ', '', x) + '</li>' for x in p.split('\n')])
+            p = pretty_html(p)
             html += "<" + p_type + ">" + self.expand_references(p) + "</" + p_type + ">\n"
         return html
 
