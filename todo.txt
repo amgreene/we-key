@@ -17,7 +17,8 @@ ACTUAL DATA
 
 # Add Birth (done), Death, Marriage, Travel, Naturalization, etc. images to index
 # Export images from Ancestry (census, passenger lists, etc.)
-# Start conerting people data
+# Stop calling these .html files; they aren't.
+# Start converting people data
 # Start converting/writing essays
 # Convert tiffs to pngs
 
@@ -53,11 +54,12 @@ APPEARANCE
 # More wiki-like markup -- some table-like markup
 # Better font choices in css
 # "Header" stuff on the side, not the top
-# Head shot/primary image
+# Head shot/primary image/gallery
 # Make display of auto-indexed xref links sensitive to the type of xref document
 # jquery?
 # Smallcaps for last names?
 # Tablet-friendly
+# Floating images (autogenerate small versions)
 
 NAVIGATION
 

@@ -236,9 +236,9 @@ class Page:
     def expand_atpaths(self, s):
         def do_lookup(at_path):
             at_path = at_path.group(1)
-            return "<a href='" + at_path + "'>" + self.find_name_for(at_path) + "</a>"
-        s = re.sub(r'@{(.*?)} ?\\?qua{(.*?)}', r'<a href="\1">\2</a>', s)
-        s = re.sub(at_path_re + r' ?\\?qua{(.*?)}', r'<a href="\1">\2</a>', s)
+            return "<span class='qlinkwrapper'><a href='" + at_path + "'>" + self.find_name_for(at_path) + "</a></span>"
+        s = re.sub(r'@{(.*?)} ?\\?qua{(.*?)}', r'<span class="qlinkwrapper"><a href="\1">\2</a></span>', s)
+        s = re.sub(at_path_re + r' ?\\?qua{(.*?)}', r'<span class="qlinkwrapper"><a href="\1">\2</a></span>', s)
         s = re.sub(at_path_re, do_lookup, s) # r'<a href="\1">\1</a>', s)
         return s
 
@@ -394,6 +394,12 @@ class Page:
 
         self.header_stuff(outlines)
         outlines.append(self.generate_ancestors_compact_html())
+
+        # TwitterBootstrap hierarchy
+        outlines.append("<div class='container-fluid'>")
+        outlines.append("<div class='row'>")
+        outlines.append("<div class='col-xs-12 col-md-8 col-md-offset-2'>")
+
         outlines.append("<div class='text'>")
         if self.info.has_key('isform'):
             outlines.append("<table cellpadding=0 cellborders=0>")
@@ -406,7 +412,7 @@ class Page:
         if is_stub:
             outlines.append("This page is a stub. Nothing more is known at this time.")
 
-        outlines.append("</div>")
+        outlines.append("</div>") # end of text
 
         if self.mtime:
             outlines.append("<div class='mtime'>Last updated " + self.mtime + "</div>")
@@ -418,6 +424,9 @@ class Page:
                 for url in splits[1:]:
                     outlines.append("<img src='" + url + "'><br>")
 
+        outlines.append("</div>") # end of col
+        outlines.append("</div>") # end of row
+        outlines.append("</div>") # end of container
 
         body_block = u'\n'.join([unicode(s) for s in outlines])
         template = open('templates/layout.html', 'r').read()  # for now.... will migrate to Flash/Jinja soon

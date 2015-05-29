@@ -19,6 +19,36 @@ a:hover
   text-decoration: underline;
 }
 
+div.text a
+{
+  color: black;
+  border-bottom: 1px dotted #808080;
+}
+
+div.text a:hover
+{
+  color: blue;
+  text-decoration: none;
+  border-bottom: 1px solid blue;
+}
+
+.linkwrapper {
+  border-bottom: 1px dotted #808080;
+}
+
+.linkwrapper:hover {
+  border-bottom: 1px sold blue;
+}
+
+.linkwrapper a {
+  color: black;
+}
+
+.linkwrapper a:hover {
+  text-decoration: none;
+  color: blue;
+}
+
 a.stub, a.stub:visited
 {
   color: #d0d0d0;
@@ -64,26 +94,12 @@ div.text
   border-radius: 12pt;
   background-color: #ffe;
   color: black;
-  width: 640px;
   font-size: 14pt;
 }
 
 hr
 {
   width: 500px;
-}
-
-div.text a
-{
-  color: black;
-  border-bottom: 1px dotted #808080;
-}
-
-div.text a:hover
-{
-  color: blue;
-  text-decoration: none;
-  border-bottom: 1px solid blue;
 }
 
 img.img_on_page {
