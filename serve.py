@@ -35,13 +35,8 @@ def serve_image(key):
 
 @app.route("/<name>")
 def do_name(name):
-    csslink = '<link rel="stylesheet" type="text/css" href="static/g.css">'
-    csslink += '<script src="//use.edgefonts.net/alegreya;shanti.js"></script>'
     page = Page.find(name)
-    return (csslink + 
-            page.turn_page_into_html() +
-            "<hr>Tools: <a href='/index/tags'>Tags</a> | <a href='/index/images'>Images</a> | <a target='_blank' href='/reindex'>Re-index</a>"
-        )
+    return page.turn_page_into_html()
 
 if __name__ == "__main__":
     app.run()

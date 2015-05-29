@@ -6,6 +6,8 @@ import json
 import re
 import os
 
+from conf import conf
+
 data_dir = '/data/amg/Dropbox/Genealogy/web/'
 def data_open(file_name):
     return codecs.open(os.path.join(data_dir, file_name), 'r', 'utf-8')
@@ -385,8 +387,10 @@ class Page:
         return ['/img/' + u for u in urls]
 
     def turn_page_into_html(self):
+
         outlines = []
-        outlines.append("<title>" + self.page_name + "</title>")
+        #outlines.append("<title>" + self.page_name + "</title>")
+
         self.header_stuff(outlines)
         outlines.append(self.generate_ancestors_compact_html())
         outlines.append("<div class='text'>")
@@ -413,7 +417,14 @@ class Page:
                 for url in splits[1:]:
                     outlines.append("<img src='" + url + "'><br>")
 
-        return u'\n'.join([unicode(s) for s in outlines])
+
+        body_block = u'\n'.join([unicode(s) for s in outlines])
+        template = open('templates/layout.html', 'r').read()  # for now.... will migrate to Flash/Jinja soon
+        template = template.replace('{{ title }}', self.page_name)
+        template = template.replace('{{ ga_key }}', conf['ga_key'])
+        template = template.replace('{% block body %}{% endblock %}', body_block)
+
+        return template
 
 
 def make_index():

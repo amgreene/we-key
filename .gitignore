@@ -2,6 +2,9 @@
 \#*#
 *.pyc
 
+# Personal config overrides (which you don't want to share with the world!)
+conf_local.py
+
 # virtualenv directories:
 Scripts/
 Lib/
