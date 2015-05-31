@@ -25,6 +25,7 @@ ACTUAL DATA
 DATA AND METADATA
 
 # parse text into a structured tree AT LOAD TIME, with {} designating atoms etc., and then render *that*
+# be more formal about end of info block
 # Correct formatting of quas.
 # support for confidence levels
 # support for external URLs
@@ -35,6 +36,8 @@ DATA AND METADATA
 # Implicit identification of family name vs given name?
 # \[citation] within data, to be turned into HTML decorations
 # Clean up all places where I'm currently forcing info to have a single value by using [0] to get only the first
+# Do something nice with tiffs (since the browser can't deal with them)
+
 
 DATA VALIDATION
 
@@ -97,13 +100,17 @@ NARRATIVE FLOW
 
 Sprint 5 -- 2015-05-29 and ongoing
 
-# Redo everything to use Twitter Bootstrap
+# STARTED Redo everything to use Twitter Bootstrap
+# STARTED Clean up code to conform to pep8
+# STARTED Floating images (autogenerate small versions)
 # DONE A few quick HTML nicities for & and ' and " and -- 
 # DONE Use config file to locate data directory instead of hardcoded path
 # DONE Support arbitrary URLs (for external links)
 # DONE \i for italics
 # DONE increase font size
 # DONE dotted underlines for links in the main text
+# DONE use SHA hashes to refer to images (since I keep renaming/rearranging them)
+
 
 [Long break between sprints 4 and 5]
 

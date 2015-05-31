@@ -108,6 +108,25 @@ img.img_on_page {
     margin: 12px;
 }
 
+div.img_holder
+{
+    border: 1px solid #008f8f;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 330px;
+}
+
+div.img_holder img
+{
+    max-width: 300px;
+}
+
+div.img_caption
+{
+    text-align: center;
+}
+
 /* Family tree compact representation */
 
 div.ftree

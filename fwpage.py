@@ -7,11 +7,11 @@ import re
 import os
 
 from conf import conf
+from util import *
 
-def data_open(file_name):
-    return codecs.open(os.path.join(conf['data_dir'], file_name), 'r', 'utf-8')
 
 at_path_re = r'@([-A-Za-z0-9_]+)'
+
 
 def uncamel_case(s):
     s = re.sub('([a-z])([A-Z])', r'\1 \2', s)
@@ -20,6 +20,7 @@ def uncamel_case(s):
     s = re.sub('-', ' ', s)
     s = re.sub('_', ' ', s)
     return s
+
 
 def pretty_html(s):
     s = s.replace('&', '&amp;')
@@ -30,7 +31,37 @@ def pretty_html(s):
     # to do: quotes that are not adjacent to a space....
     s = s.replace("--", '&ndash;')
     s = re.sub(r"\\i{(.*?)}", r"<i>\1</i>", s)
+
+    # expand img tags (this is really no longer pretty_html but
+    # it's "convert We-Key markup to HTML")
+    def img_replacement(m):
+        key = m.group('key')
+        caption = m.group('caption')
+        alignment = (m.group('alignment') or 'left').lower()
+
+        if alignment.startswith('l'):
+            alignment_class='pull-left'
+        elif alignment.startswith('r'):
+            alignment_class='pull-right'
+        else:
+            alignment_class='center-block'
+
+        i = '<div class="clearfix"></div>'
+        i += '<div class="img_holder ' + alignment_class + '">'       # to do: use template
+        i += '<a href="/img/' + key + '">'    # to do: use template
+        i += '<img style="max-width: 300px"'  # to do: use css class
+        i += ' src="/img/' + key + '">'      # to do: use template
+        i += "</a>"
+        if caption:
+            i += "<div class='img_caption'>"  # to do: use template
+            i += caption                      # to do: HTML conversion?
+            i += "</div>"                     # close img_caption
+        i += "</div>"                         # close img_holder
+        return i
+
+    s = re.sub(r'\\img{(?P<key>.*?)}({(?P<caption>.*?)})?({(?P<alignment>.*?)})?', img_replacement, s)
     return s
+
 
 class Info:
     def __init__(self, value=''):
@@ -79,12 +110,14 @@ class Info:
         else:
             return self.data.has_key(key)
 
+
 # This once seemed like a good idea, because it would make the calling code more readable
 # But in practice, the problems seem to outweigh the benefit
 #    def __getattr__(self, name):
 #        if self.info.has_key(name):
 #            return self.info[name]
 #        return []
+
 
 class Page:
     cache = {}
@@ -183,19 +216,21 @@ class Page:
         self.mtime = datetime.datetime.fromtimestamp(
             os.path.getmtime(os.path.join(conf['data_dir'], file_name))).strftime('%Y-%m-%d %H:%M:%S')
         current_infos = []
+        parsing_header = True
         for line in data_open(file_name):
             line = line.rstrip()
             if line == '':
                 if self.text:
                     self.text += '\n' # blank line (but not at the beginning)
-            elif line[0] == '\\':
+                parsing_header = False
+            elif parsing_header and line[0] == '\\':
                 if '=' in line:
                     (key, value) = line[1:].split('=', 2)
                 else:
                     key=line[1:]
                     value=True
                 current_infos = [self.info.add(key, value)]
-            elif line.lstrip()[0] == '\\': # indented -- for now, we're not recursing, but we should
+            elif parsing_header and line.lstrip()[0] == '\\': # indented -- for now, we're not recursing, but we should
                 info_indent = len(line.split('\\', 1)[0])
                 if info_indent > len(current_infos) + 1:
                     print "Error: indent is too great"
@@ -412,6 +447,8 @@ class Page:
         if is_stub:
             outlines.append("This page is a stub. Nothing more is known at this time.")
 
+        outlines.append("<div class='clearfix'></div>") # to make sure floats are closed off
+
         outlines.append("</div>") # end of text
 
         if self.mtime:
@@ -434,6 +471,7 @@ class Page:
         template = template.replace('{{ ga_key }}', conf['ga_key'])
         template = template.replace('{% block body %}{% endblock %}', body_block)
 
+
         return template
 
 
@@ -449,6 +487,7 @@ def make_index():
     converted_refs = dict([(k, sorted(list(v))) for (k, v) in refs.items()])
     with codecs.open(os.path.join(conf['data_dir'], 'xrefs.json'), 'w', 'utf-8') as o:
         json.dump(converted_refs, o, ensure_ascii=False, indent=2, sort_keys=True)
+
 
 def make_relationship_index():
     refs = {}
@@ -478,6 +517,7 @@ def make_relationship_index():
     with codecs.open(os.path.join(conf['data_dir'], 'relationships.json'), 'w', 'utf-8') as o:
         json.dump(refs, o, ensure_ascii=False, indent=2, sort_keys=True)
 
+
 def html_index_tags():
     tags = set()
     pages = set()
@@ -506,6 +546,7 @@ def html_index_tags():
     outlines.append("</body></html>")
     return '<br>'.join(outlines)
 
+
 def html_index_images():
     outlines = []
     outlines.append("<html><body>")
@@ -515,11 +556,13 @@ def html_index_images():
     outlines.append("</body></html>")
     return '<br>'.join(outlines)
 
+
 def locate_image(key):
     for line in data_open('images-index.txt'):
         if line.startswith(key + ' '):
             return os.path.join(conf['img_dir'], line.split(' ')[1]).strip()
     return None
+
 
 if __name__ == '__main__':
     import sys
