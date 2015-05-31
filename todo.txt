@@ -17,10 +17,15 @@ ACTUAL DATA
 
 # Add Birth (done), Death, Marriage, Travel, Naturalization, etc. images to index
 # Export images from Ancestry (census, passenger lists, etc.)
-# Stop calling these .html files; they aren't.
 # Start converting people data
 # Start converting/writing essays
-# Convert tiffs to pngs
+
+IMAGES
+
+# Consolidate referenced images
+# Generate smaller versions
+# Convert TIFFs
+# Push that subset to website
 
 DATA AND METADATA
 
@@ -54,7 +59,6 @@ AUTO-GENERATED CONTENT SUMMARY
 
 APPEARANCE
 
-# More wiki-like markup -- some table-like markup
 # Better font choices in css
 # "Header" stuff on the side, not the top
 # Head shot/primary image/gallery
@@ -62,7 +66,7 @@ APPEARANCE
 # jquery?
 # Smallcaps for last names?
 # Tablet-friendly
-# Floating images (autogenerate small versions)
+# Adjust y offset of dotted underline for links
 
 NAVIGATION
 
@@ -110,6 +114,7 @@ Sprint 5 -- 2015-05-29 and ongoing
 # DONE increase font size
 # DONE dotted underlines for links in the main text
 # DONE use SHA hashes to refer to images (since I keep renaming/rearranging them)
+# DONE Stop calling these .html files; they aren't. (Changed to .wk)
 
 
 [Long break between sprints 4 and 5]

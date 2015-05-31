@@ -143,7 +143,7 @@ class Page:
         if ':' in page_name:
             return
         
-        file_name = page_name + '.html'
+        file_name = page_name + '.wk'
         if file_name[0] == '@':
             file_name = file_name[1:]
         self.load(file_name)
@@ -174,7 +174,7 @@ class Page:
             return at_page.name()
         except Exception as e:
             # print e
-            for line in data_open('etc.html'):
+            for line in data_open('etc.wk'):
                 if line.startswith(at_path + ' '):
                     return line.split(' ', 1)[1]
             return uncamel_case(at_path)
@@ -182,7 +182,7 @@ class Page:
     def name(self):
         if self.has_key('name'):
             return self.get('name')[0]
-        for line in data_open('etc.html'):
+        for line in data_open('etc.wk'):
             if line.startswith('@' + self.page_name + ' '):
                 return line.split(' ', 1)[1]
         return uncamel_case(self.page_name)
@@ -200,7 +200,7 @@ class Page:
                     ]) + ")"
             return n
         except:
-            for line in data_open('etc.html'):
+            for line in data_open('etc.wk'):
                 if line.startswith('@' + at_path + ' '):
                     return line.split(' ', 1)[1]
             return uncamel_case(at_path)
@@ -477,9 +477,7 @@ class Page:
 
 def make_index():
     refs = collections.defaultdict(set)
-    for f in os.listdir(conf['data_dir']):
-        if not f.endswith('.html'):
-            continue
+    for f in list_wk_files():
         for line in data_open(f):
             for m in re.findall(at_path_re, line):
                 refs[m].add('@' + f[:-5])
@@ -498,9 +496,7 @@ def make_relationship_index():
             refs[at_path][relationship] = []
         refs[at_path][relationship].append(other_at_path)
 
-    for f in os.listdir(conf['data_dir']):
-        if not f.endswith('.html'):
-            continue
+    for f in list_wk_files():
         at_path = '@' + f[:-5]
         p = Page.find(at_path)
 
@@ -526,9 +522,7 @@ def html_index_tags():
         (key, path) = line.strip().split(' ', 1)
         tags.add(key)
 
-    for f in os.listdir(conf['data_dir']):
-        if not f.endswith('.html'):
-            continue
+    for f in list_wk_files():
         tags.add(f[:-5])
         pages.add(f[:-5])
         for line in data_open(f):
