@@ -111,14 +111,6 @@ class Info:
             return self.data.has_key(key)
 
 
-# This once seemed like a good idea, because it would make the calling code more readable
-# But in practice, the problems seem to outweigh the benefit
-#    def __getattr__(self, name):
-#        if self.info.has_key(name):
-#            return self.info[name]
-#        return []
-
-
 class Page:
     cache = {}
 
@@ -271,9 +263,9 @@ class Page:
     def expand_atpaths(self, s):
         def do_lookup(at_path):
             at_path = at_path.group(1)
-            return "<span class='qlinkwrapper'><a href='" + at_path + "'>" + self.find_name_for(at_path) + "</a></span>"
-        s = re.sub(r'@{(.*?)} ?\\?qua{(.*?)}', r'<span class="qlinkwrapper"><a href="\1">\2</a></span>', s)
-        s = re.sub(at_path_re + r' ?\\?qua{(.*?)}', r'<span class="qlinkwrapper"><a href="\1">\2</a></span>', s)
+            return "<span class='linkwrapper'><a href='" + at_path + "'>" + self.find_name_for(at_path) + "</a></span>"
+        s = re.sub(r'@{(.*?)} ?\\?qua{(.*?)}', r'<span class="linkwrapper"><a href="\1">\2</a></span>', s)
+        s = re.sub(at_path_re + r' ?\\?qua{(.*?)}', r'<span class="linkwrapper"><a href="\1">\2</a></span>', s)
         s = re.sub(at_path_re, do_lookup, s) # r'<a href="\1">\1</a>', s)
         return s
 

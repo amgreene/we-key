@@ -24,7 +24,7 @@ IMAGES
 
 # Consolidate referenced images
 # Generate smaller versions
-# Convert TIFFs
+# Convert TIFFs (since the browsers don't like them)
 # Push that subset to website
 
 DATA AND METADATA
@@ -41,8 +41,8 @@ DATA AND METADATA
 # Implicit identification of family name vs given name?
 # \[citation] within data, to be turned into HTML decorations
 # Clean up all places where I'm currently forcing info to have a single value by using [0] to get only the first
-# Do something nice with tiffs (since the browser can't deal with them)
-
+# Allow in-file pagination (a la Onchan Letters)
+# Allow in-file sub-pages (rather than one file = one @ link)
 
 DATA VALIDATION
 
