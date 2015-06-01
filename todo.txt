@@ -23,7 +23,6 @@ ACTUAL DATA
 IMAGES
 
 # Consolidate referenced images
-# Generate smaller versions
 # Convert TIFFs (since the browsers don't like them)
 # Push that subset to website
 
@@ -115,6 +114,7 @@ Sprint 5 -- 2015-05-29 and ongoing
 # DONE dotted underlines for links in the main text
 # DONE use SHA hashes to refer to images (since I keep renaming/rearranging them)
 # DONE Stop calling these .html files; they aren't. (Changed to .wk)
+# DONE Generate smaller versions of images that we're using in a web_stage directory
 
 
 [Long break between sprints 4 and 5]

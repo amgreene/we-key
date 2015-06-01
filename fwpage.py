@@ -550,8 +550,30 @@ def locate_image(key):
             return os.path.join(conf['img_dir'], line.split(' ')[1]).strip()
     return None
 
+def convert_images():
+    from subprocess import call
+    from images import find_image_by_hashlet
+
+    if not os.path.exists(conf['web_stage_dir']):
+        os.makedirs(os.path.join(conf['web_stage_dir'], 'img_thumbs'))
+
+    for wkfile in list_wk_files():
+        wk_data = data_open(wkfile).read()
+        for match in re.finditer(r'\\img{(?P<hashlet>.*?)}', wk_data):
+            hashlet = match.group('hashlet')
+            (full_hash, rel_path) = find_image_by_hashlet(hashlet)
+            print "Converting", rel_path
+            call([conf['im_convert_path'],
+                  os.path.normpath(os.path.join(conf['img_dir'], rel_path)).lower(),
+                  '-resize', '300x800',
+                  os.path.normpath(os.path.join(conf['web_stage_dir'], 'img_thumbs', full_hash[0:24] + '.jpg')),
+              ],
+                 cwd=os.path.dirname(conf['im_convert_path'])
+            )
+                      
 
 if __name__ == '__main__':
     import sys
     # make_relationship_index()
-    print Page.find('GersonGreene').generate_ancestors_compact_html()
+    # print Page.find('GersonGreene').generate_ancestors_compact_html()
+    convert_images()

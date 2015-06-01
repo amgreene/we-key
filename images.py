@@ -55,7 +55,7 @@ def find_image_by_hashlet(hashlet):
     for line in index_file:
         if line.startswith(hashlet):
             # strip newline, extract relative path
-            return line[:-1].split('\t')[1]
+            return line[:-1].split('\t')
 
 
 def get_abs_image_path(rel_path):

@@ -39,7 +39,7 @@ def serve_image_list():
 def serve_image(key):
     from images import find_image_by_hashlet, get_abs_image_path
     # first assume the key is a hashlet
-    rel_path = find_image_by_hashlet(key)
+    (full_hash, rel_path) = find_image_by_hashlet(key)
     # if that doesn't work, see if it's an alias
     if not rel_path:
         rel_path = locate_image(key)
