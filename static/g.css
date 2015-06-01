@@ -117,7 +117,9 @@ div.img_holder
     border: 1px solid #008f8f;
     border-radius: 5px;
     padding: 10px;
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
     width: 330px;
 }
 

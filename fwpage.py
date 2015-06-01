@@ -27,7 +27,7 @@ def pretty_html(s):
     s = s.replace(" '", ' &lsquo;')
     s = s.replace("'", '&rsquo;')
     s = s.replace(' "', ' &ldquo;')
-    s = s.replace('" ', '&rdquo; ')
+    s = s.replace('"', '&rdquo;')
     # to do: quotes that are not adjacent to a space....
     s = s.replace("--", '&ndash;')
     s = re.sub(r"\\i{(.*?)}", r"<i>\1</i>", s)
