@@ -36,7 +36,8 @@ def generate_index_file():
 
     # to do -- skip non-media file types
     # to do -- utf8 escape the values so json will be ok?
-    for (dir_path, dir_names, file_names) in os.walk(os.path.join(conf['img_dir'])):
+    for (dir_path, dir_names, file_names) in os.walk(
+            unicode(conf['img_dir'])):
         for file_name in file_names:
             extension = file_name.split('.')[-1].lower()
             if not extension in image_extensions:
@@ -44,7 +45,9 @@ def generate_index_file():
             abs_path = os.path.normpath(os.path.join(dir_path, file_name))
             rel_path = os.path.relpath(abs_path, conf['img_dir'])
             generated_hash = generate_file_hash(abs_path)
-            index_file.write(unicode(generated_hash) + u'\t' + rel_path + u'\n')
+            index_file.write(generated_hash + '\t')
+            index_file.write(rel_path)
+            index_file.write('\n')
 
 
 def find_image_by_hashlet(hashlet):
