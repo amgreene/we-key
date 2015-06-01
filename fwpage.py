@@ -470,9 +470,10 @@ class Page:
 def make_index():
     refs = collections.defaultdict(set)
     for f in list_wk_files():
+        at_path = '@' + ''.join(f.split('.')[:-1])  # drop .wk extention
         for line in data_open(f):
             for m in re.findall(at_path_re, line):
-                refs[m].add('@' + f[:-5])
+                refs[m].add(at_path)
     
     converted_refs = dict([(k, sorted(list(v))) for (k, v) in refs.items()])
     with codecs.open(os.path.join(conf['data_dir'], 'xrefs.json'), 'w', 'utf-8') as o:
@@ -489,7 +490,7 @@ def make_relationship_index():
         refs[at_path][relationship].append(other_at_path)
 
     for f in list_wk_files():
-        at_path = '@' + f[:-5]
+        at_path = '@' + ''.join(f.split('.')[:-1])  # drop .wk extention
         p = Page.find(at_path)
 
         for parent in p.get('father'):
@@ -515,8 +516,8 @@ def html_index_tags():
         tags.add(key)
 
     for f in list_wk_files():
-        tags.add(f[:-5])
-        pages.add(f[:-5])
+        tags.add(f[:-3])
+        pages.add(f[:-3])
         for line in data_open(f):
             for m in re.findall(at_path_re, line):
                 tags.add(m)
