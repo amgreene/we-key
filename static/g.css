@@ -25,32 +25,26 @@ div.text a
   qborder-bottom: 1px dotted #808080;
 }
 
-div.text a:hover
+div.text .linkwrapper a:hover
 {
   color: blue;
   text-decoration: none;
-  # border-bottom: 1px solid blue;
 }
 
-.linkwrapper {
+div.text .linkwrapper {
   border-bottom: 1px dotted #aaa;
   position: relative;
   top: -3px;
 }
 
-.linkwrapper:hover {
+div.text .linkwrapper:hover {
   border-bottom: 1px solid blue;
 }
 
-.linkwrapper a {
+div.text .linkwrapper a {
   color: black;
   position: relative;
   top: 3px;
-}
-
-.linkwrapper a:hover {
-  text-decoration: none;
-  color: blue;
 }
 
 a.stub, a.stub:visited
@@ -131,6 +125,8 @@ div.img_holder img
 div.img_caption
 {
     text-align: center;
+    font-size: 12pt;
+    color: #004f4f;
 }
 
 /* Family tree compact representation */
