@@ -1,6 +1,8 @@
 TO DO
 ======================================================================
 
+# Refactor "letters" page to be generic "display article" feature that uses we-key markup
+
 INFRASTRUCTURE
 
 # auto-index when timestamps require it
@@ -101,7 +103,11 @@ NARRATIVE FLOW
 
 ----------------------------------------------------------------------
 
-Sprint 5 -- 2015-05-29 and ongoing
+Sprint 6 -- 2015-06-11
+
+# STARTED Add paged_article template that uses TwitterBootstrap
+
+Sprint 5 -- 2015-05-29 
 
 # STARTED Redo everything to use Twitter Bootstrap
 # STARTED Clean up code to conform to pep8

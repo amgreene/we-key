@@ -458,9 +458,12 @@ class Page:
         outlines.append("</div>") # end of container
 
         body_block = u'\n'.join([unicode(s) for s in outlines])
-        template = open('templates/layout.html', 'r').read()  # for now.... will migrate to Flash/Jinja soon
+        template = open('templates/%s.html' % (
+            self.info.get('template')[0] if self.has_key('template') else 'layout',
+            ), 'r').read()  # for now.... will migrate to Flash/Jinja soon
         template = template.replace('{{ title }}', self.page_name)
         template = template.replace('{{ ga_key }}', conf['ga_key'])
+        template = template.replace('{{ mtime }}', str(self.mtime))
         template = template.replace('{% block body %}{% endblock %}', body_block)
 
 

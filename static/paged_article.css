@@ -1,0 +1,35 @@
+div.jumbotron .container {
+  font-size: 48pt;
+  font-weight: 800;
+  line-height: 50pt;
+}
+
+div.jumbotron .container .superhed {
+  font-size: 24pt;
+  font-weight: 400;
+  line-height: 24pt;
+  color: #888;
+}
+
+div.row {
+  width: 98%;
+  display: block;
+}
+
+div.text {
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 10px;
+}
+
+.nextpage {
+  text-align: right;
+  font-weight: bold;
+  font-style: upright;
+  margin-right: 300px;
+}
+
+.nexttitle {
+  font-size: 14pt;
+}
+
